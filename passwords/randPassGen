@@ -1,0 +1,62 @@
+#!/usr/local/bin/python3
+# -*- coding: utf-8 -*-
+
+import argparse
+import random
+import string
+import time
+
+# banners
+def banners():
+    print(" ██▓███   ▄▄▄        ██████   ██████      ▄████ ▓█████  ███▄    █ ")
+    print("▓██░  ██▒▒████▄    ▒██    ▒ ▒██    ▒     ██▒ ▀█▒▓█   ▀  ██ ▀█   █ ")
+    print("▓██░ ██▓▒▒██  ▀█▄  ░ ▓██▄   ░ ▓██▄      ▒██░▄▄▄░▒███   ▓██  ▀█ ██▒")
+    print("▒██▄█▓▒ ▒░██▄▄▄▄██   ▒   ██▒  ▒   ██▒   ░▓█  ██▓▒▓█  ▄ ▓██▒  ▐▌██▒")
+    print("▒██▒ ░  ░ ▓█   ▓██▒▒██████▒▒▒██████▒▒   ░▒▓███▀▒░▒████▒▒██░   ▓██░")
+    print("▒▓▒░ ░  ░ ▒▒   ▓▒█░▒ ▒▓▒ ▒ ░▒ ▒▓▒ ▒ ░    ░▒   ▒ ░░ ▒░ ░░ ▒░   ▒ ▒ ")
+    print("░▒ ░       ▒   ▒▒ ░░ ░▒  ░ ░░ ░▒  ░ ░     ░   ░  ░ ░  ░░ ░░   ░ ▒░")
+    print("\033[1;35m                      -=Author: Lucas Liu=-                       \033[1;0m")
+
+#! main function
+def randPassGen(characters, length, num):
+    # paramters
+    '''
+    characters: characters you want to generate password from
+    length: the length of the passwords
+    num: the number of passwords you want to generate
+    '''
+    # generate the passwords
+    character = list(characters)
+    # character dictionary for the future use
+    character_dict = {
+        "0": string.digits,
+        "a": string.ascii_lowercase,
+        "A": string.ascii_uppercase,
+        "@": string.punctuation
+    }
+    # collect the passwords here
+    strings = ""
+    for key, value in character_dict.items():
+        for i in range(len(character)):
+            if character[i] == key:
+                strings += value
+    # printing out the passwords
+    print("\033[1;35mPasswords has been generated...\033[1;0m")
+    if num>0:
+        for i in range(num):
+            passwords = ''.join(random.choice(strings) for i in range(length))
+            print(f"\033[1;32m[+] \033[1;34mpassword: \033[1;0m{passwords}")
+            time.sleep(0.5)
+    elif num == 0:
+        passwords = ''.join(random.choice(strings) for i in range(length))
+        print(f"\033[1;35mPassword: {passwords}\033[1;0m")
+
+# argument parser
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description=banners())
+    parser.add_argument("-c", "--characters", type=str, required=False, default="0aA@",help="the characters you want to pass in\ndefalut is \033[1;35m'0aA@'\033[1;0m, \033[1;34m`0`\033[1;0m represents numbers\n\033[1;34m`@`\033[1;0m represents special characters")
+    parser.add_argument("-l", "--length", required=True, type=int, help="length of the passwords")
+    parser.add_argument("-n", "--num", required=False, type=int, default=1, help="number of generated passwords")
+    args = parser.parse_args()
+    # call the function
+    randPassGen(args.characters, args.length, args.num)

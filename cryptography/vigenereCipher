@@ -1,0 +1,61 @@
+#!/usr/local/bin/python3
+# -*- coding: utf-8 -*-
+
+import argparse
+
+# generating banners
+banner = """
+ ██▒   █▓ ██▓  ▄████ ▓█████  ███▄    █  ██▀███  ▓█████     ▄████▄   ██▓ ██▓███   ██░ ██ ▓█████  ██▀███  
+▓██░   █▒▓██▒ ██▒ ▀█▒▓█   ▀  ██ ▀█   █ ▓██ ▒ ██▒▓█   ▀    ▒██▀ ▀█  ▓██▒▓██░  ██▒▓██░ ██▒▓█   ▀ ▓██ ▒ ██▒
+ ▓██  █▒░▒██▒▒██░▄▄▄░▒███   ▓██  ▀█ ██▒▓██ ░▄█ ▒▒███      ▒▓█    ▄ ▒██▒▓██░ ██▓▒▒██▀▀██░▒███   ▓██ ░▄█ ▒
+  ▒██ █░░░██░░▓█  ██▓▒▓█  ▄ ▓██▒  ▐▌██▒▒██▀▀█▄  ▒▓█  ▄    ▒▓▓▄ ▄██▒░██░▒██▄█▓▒ ▒░▓█ ░██ ▒▓█  ▄ ▒██▀▀█▄  
+   ▒▀█░  ░██░░▒▓███▀▒░▒████▒▒██░   ▓██░░██▓ ▒██▒░▒████▒   ▒ ▓███▀ ░░██░▒██▒ ░  ░░▓█▒░██▓░▒████▒░██▓ ▒██▒
+   ░ ▐░  ░▓   ░▒   ▒ ░░ ▒░ ░░ ▒░   ▒ ▒ ░ ▒▓ ░▒▓░░░ ▒░ ░   ░ ░▒ ▒  ░░▓  ▒▓▒░ ░  ░ ▒ ░░▒░▒░░ ▒░ ░░ ▒▓ ░▒▓░
+\033[1;35m                                         -=Author: Lucas Liu=-                                         \033[1;0m
+"""
+def banners(banner):
+    print(banner)
+
+#! main functions
+def vigenereCipher(message, mode, key):
+    # generating keys
+    def generate_key(message, key):
+        key = list(key)
+        if len(message) == len(key):
+            return(key)
+        else:
+            for i in range(len(message)-len(key)):
+                key.append(key[i % len(key)])
+        return("".join(key))
+    # set the mode to encode
+    if mode == "encode":
+        message = message.upper()
+        keyword = generate_key(message, key)
+        cipher_text = []
+        for i in range(len(message)):
+            x = (ord(message[i])+ord(keyword[i]))%26
+            x += ord('A')
+            cipher_text.append(chr(x))
+            encrypted_message = "".join(cipher_text)
+        print(f"Encrypted message: \033[1;34m{encrypted_message}\033[1;0m")
+    # set the mode to decode
+    elif mode == "decode":
+        message = message.upper()
+        keyword = generate_key(message, key)
+        orig_text = []
+        for i in range(len(message)):
+            x = (ord(message[i])-ord(keyword[i])+26)%26
+            x += ord('A')
+            orig_text.append(chr(x))
+            decrypted_message = "".join(orig_text)
+        print(f"Decrypted message: \033[1;34m{decrypted_message}\033[1;0m")
+
+# creating argument
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description=banners(banner))
+    parser.add_argument("-m", "--message", help="message to be encrypted or decrypted")
+    parser.add_argument("mode", help="\033[1;35mencode\033[1;0m or \033[1;35mdecode\033[1;0m the message")
+    parser.add_argument("-k", "--key", help="key to encrypt or decrypt the message")
+    args = parser.parse_args()
+
+    vigenereCipher(args.message, args.mode, args.key)

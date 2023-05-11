@@ -1,0 +1,84 @@
+#!/usr/local/bin/python3
+# -*- coding: utf-8 -*-
+
+import argparse
+
+# generating banners
+banner = """
+ ██▓███   ██▓    ▄▄▄     ▓██   ██▓  █████▒▄▄▄       ██▓ ██▀███      ▄████▄   ██▓ ██▓███   ██░ ██ ▓█████  ██▀███  
+▓██░  ██▒▓██▒   ▒████▄    ▒██  ██▒▓██   ▒▒████▄    ▓██▒▓██ ▒ ██▒   ▒██▀ ▀█  ▓██▒▓██░  ██▒▓██░ ██▒▓█   ▀ ▓██ ▒ ██▒
+▓██░ ██▓▒▒██░   ▒██  ▀█▄   ▒██ ██░▒████ ░▒██  ▀█▄  ▒██▒▓██ ░▄█ ▒   ▒▓█    ▄ ▒██▒▓██░ ██▓▒▒██▀▀██░▒███   ▓██ ░▄█ ▒
+▒██▄█▓▒ ▒▒██░   ░██▄▄▄▄██  ░ ▐██▓░░▓█▒  ░░██▄▄▄▄██ ░██░▒██▀▀█▄     ▒▓▓▄ ▄██▒░██░▒██▄█▓▒ ▒░▓█ ░██ ▒▓█  ▄ ▒██▀▀█▄  
+▒██▒ ░  ░░██████▒▓█   ▓██▒ ░ ██▒▓░░▒█░    ▓█   ▓██▒░██░░██▓ ▒██▒   ▒ ▓███▀ ░░██░▒██▒ ░  ░░▓█▒░██▓░▒████▒░██▓ ▒██▒
+▒▓▒░ ░  ░░ ▒░▓  ░▒▒   ▓▒█░  ██▒▒▒  ▒ ░    ▒▒   ▓▒█░░▓  ░ ▒▓ ░▒▓░   ░ ░▒ ▒  ░░▓  ▒▓▒░ ░  ░ ▒ ░░▒░▒░░ ▒░ ░░ ▒▓ ░▒▓░
+░▒ ░     ░ ░ ▒  ░ ▒   ▒▒ ░▓██ ░▒░  ░       ▒   ▒▒ ░ ▒ ░  ░▒ ░ ▒░     ░  ▒    ▒ ░░▒ ░      ▒ ░▒░ ░ ░ ░  ░  ░▒ ░ ▒░
+░░         ░ ░    ░   ▒   ▒ ▒ ░░   ░ ░     ░   ▒    ▒ ░  ░░   ░    ░         ▒ ░░░        ░  ░░ ░   ░     ░░   ░ 
+\033[1;35m                                              -=Author: Lucas Liu=-                                              \033[1;0m
+"""
+def banners(banner):
+    print(banner)
+
+#! main function
+def playfairCipher(message, key):
+    def chunker(seq, size):
+        return (seq[pos:pos + size] for pos in range(0, len(seq), size))
+
+    def prepare_input(dirty):
+        """
+        Prepare the plaintext by up-casing it,
+        and separating uninterrupted digraphs with X's
+        """
+        dirty = "".join([c.upper() for c in dirty if c.isalpha()])
+        clean = ""
+        if len(dirty) < 2:
+            return dirty
+        for i in range(len(dirty) - 1):
+            clean += dirty[i]
+            if dirty[i] == dirty[i + 1]:
+                clean += "X"
+        clean += dirty[-1]
+        if len(clean) & 1:
+            clean += "X"
+        return clean
+
+    def generate_table(key):
+        # I and J are used interchangeably for the 5x5 grid
+        alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"
+        table = []
+        # first, we insert the key
+        for char in key.upper():
+            if char not in table and char in alphabet:
+                table.append(char)
+        # then, we fill the rest of the table in with the remaining alphabet chars
+        for char in alphabet:
+            if char not in table:
+                table.append(char)
+        return table
+    # encrypt playfair message
+    def playfair_encrypt(message, key):
+        message = prepare_input(message)
+        table = generate_table(key)
+        ciphertext = ""
+        for digraph in chunker(message, 2):
+            row1, col1 = divmod(table.index(digraph[0]), 5)
+            row2, col2 = divmod(table.index(digraph[1]), 5)
+            if row1 == row2:
+                ciphertext += table[row1 * 5 + (col1 + 1) % 5]
+                ciphertext += table[row2 * 5 + (col2 + 1) % 5]
+            elif col1 == col2:
+                ciphertext += table[((row1 + 1) % 5) * 5 + col1]
+                ciphertext += table[((row2 + 1) % 5) * 5 + col2]
+            else:
+                ciphertext += table[row1 * 5 + col2]
+                ciphertext += table[row2 * 5 + col1]
+        return ciphertext
+    print(f"Encrypted message: \033[1;34m{playfair_encrypt(message, key)}\033[1;0m")
+
+# creating argument
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description=banners(banner))
+    parser.add_argument("-m", "--message", help="message to be encrypted")
+    parser.add_argument("-k", "--key", help="key of the encrypted message")
+    args = parser.parse_args()
+
+    playfairCipher(args.message, args.key)

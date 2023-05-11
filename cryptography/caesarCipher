@@ -1,0 +1,33 @@
+#!/usr/local/bin/python3
+# -*- coding: utf-8 -*-
+
+import string
+import argparse
+from random import randint
+ 
+def casarCipher(message, key, SYMBOLS):
+	translated = ''
+	for symbol in message:
+		if symbol in SYMBOLS:
+			symbolIndex = SYMBOLS.find(symbol)
+			translatedIndex = symbolIndex + key
+			if translatedIndex >= len(SYMBOLS):
+				translatedIndex = translatedIndex - len(SYMBOLS)
+			elif translatedIndex < 0:
+				translatedIndex = translatedIndex + len(SYMBOLS)
+			translated = translated + SYMBOLS[translatedIndex]
+		else:
+			translated = translated + symbol
+	print(f"{translated}\nkey: {key}")
+
+if __name__ == '__main__':
+	parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='Caesar Cipher Encypter')
+	parser.add_argument("-m", "--message", default=None, help="message you want to encrypt")
+	parser.add_argument("-k", "--key", type=int, default=None, help="key for encypter")
+	parser.add_argument("-s", "--symbol", default=None, help="symbols for encypter")
+	args = parser.parse_args()
+	if args.symbol is None:
+		args.symbol = string.printable.replace(' \t\n\r\x0b\x0c', '')
+	if args.key is None:
+		args.key = randint(0, len(args.symbol))
+	casarCipher(args.message, args.key, args.symbol)

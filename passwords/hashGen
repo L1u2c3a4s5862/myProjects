@@ -1,0 +1,67 @@
+#!/usr/local/bin/python3
+# -*- coding: utf-8 -*-
+
+import time
+import string
+import random
+import hashlib
+import argparse
+from passlib.hash import lmhash
+
+banner = '''
+ ██░ ██  ▄▄▄        ██████  ██░ ██      ▄████ ▓█████  ███▄    █ 
+▓██░ ██▒▒████▄    ▒██    ▒ ▓██░ ██▒    ██▒ ▀█▒▓█   ▀  ██ ▀█   █ 
+▒██▀▀██░▒██  ▀█▄  ░ ▓██▄   ▒██▀▀██░   ▒██░▄▄▄░▒███   ▓██  ▀█ ██▒
+░▓█ ░██ ░██▄▄▄▄██   ▒   ██▒░▓█ ░██    ░▓█  ██▓▒▓█  ▄ ▓██▒  ▐▌██▒
+░▓█▒░██▓ ▓█   ▓██▒▒██████▒▒░▓█▒░██▓   ░▒▓███▀▒░▒████▒▒██░   ▓██░
+ ▒ ░░▒░▒ ▒▒   ▓▒█░▒ ▒▓▒ ▒ ░ ▒ ░░▒░▒    ░▒   ▒ ░░ ▒░ ░░ ▒░   ▒ ▒ 
+ \033[1;35m                     -=Author: Lucas Liu=-                     \033[1;0m'''
+
+def banners(banner):
+    print(banner)
+
+def hashGen(characters, length, num):
+    # parameters
+    '''
+    characters: the characters that will be used to generate the hash
+    length: the length of the hash
+    num: the number of hash that will be generated
+    '''
+    # generate the passwords
+    character = list(characters)
+    # character dictionary for the future use
+    character_dict = {
+        "0": string.digits,
+        "a": string.ascii_lowercase,
+        "A": string.ascii_uppercase,
+        "@": string.punctuation
+    }
+    # generate the passwords
+    strings = ''
+    for key, value in character_dict.items():
+        for i in range(len(character)):
+            if character[i] == key:
+                strings += value
+    # printout these values
+    print('\033[1;34mpasswords, NTLM/LM hashes has been generated...\033[1;0m')
+    for i in range(num):
+        passwords = ''.join(random.choice(strings) for i in range(length))
+        # generate the hashes
+        # generate NTLM hash
+        password_bytes = passwords.encode('utf-16le')
+        ntlm_hash = hashlib.new('md4', password_bytes).hexdigest()
+        # generate LM hash
+        lm_hash = lmhash.hash(passwords)
+        print(f"\033[1;32m[password] \033[1;0m{passwords}  \033[1;32m[ntlm] \033[1;0m{ntlm_hash}  \033[1;32m[lm] \033[1;0m{lm_hash}")
+        time.sleep(0.5)
+
+
+# argument parser
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description=banners(banner))
+    parser.add_argument("-c", "--characters", help="the characters that will be used to generate the hash", default="0aA@")
+    parser.add_argument("-l", "--length", type=int, help="the length of the hash", default=8)
+    parser.add_argument("-n", "--num", type=int, help="the number of hash that will be generated", default=1)
+    args = parser.parse_args()
+    # call the function
+    hashGen(args.characters, args.length, args.num)

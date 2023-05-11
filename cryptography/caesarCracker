@@ -1,0 +1,34 @@
+#!/usr/local/bin/python3
+# -*- coding: utf-8 -*-
+
+import string
+import argparse
+
+def cracker_full(message, SYMBOLS):
+	for key in range(len(SYMBOLS)):
+		translated = ''
+		for symbol in message:
+			if symbol in SYMBOLS:
+				symbolIndex = SYMBOLS.find(symbol)
+				translatedIndex = symbolIndex - key
+				if translatedIndex < 0:
+					translatedIndex = translatedIndex + len(SYMBOLS)
+				translated = translated + SYMBOLS[translatedIndex]
+			else:
+				translated = translated + symbol
+		print('Key=%s: %s' % (key, translated))
+
+if __name__ == '__main__':
+	parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawTextHelpFormatter,
+        description='Full Caesar Cipher Decypter')
+	parser.add_argument(
+		"-m", "--message",
+		default=None, help="message you want to decrypt")
+	parser.add_argument(
+		"-s", "--symbol",
+		default=None, help="symbols for decypter")
+	args = parser.parse_args()
+	if args.symbol is None:
+		args.symbol = string.printable.replace(' \t\n\r\x0b\x0c', '')
+	cracker_full(args.message, args.symbol)

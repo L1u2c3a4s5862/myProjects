@@ -1,0 +1,83 @@
+#!/usr/local/bin/python3
+# -*- coding: utf-8 -*-
+
+import argparse
+
+# split
+def split(string):
+    return [char for char in string]
+# main function `morse`
+def morse(filename, mode):
+    # morse code dictionary
+    morse_dic = {
+        'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.',
+        'F': '..-.', 'G': '--.', 'H': '....', 'I': '..', 'J': '.---',
+        'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---',
+        'P': '.--.', 'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-',
+        'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-', 'Y': '-.--',
+        'Z': '--..', '1': '.----', '2': '..---', '3': '...--', '4': '....-',
+        '5': '.....', '6': '-....', '7': '--...', '8': '---..', '9': '----.',
+        '0': '-----', ' ': '/', ':': '---...', '.': '.-.-.-'
+        }
+    # inputs and outputs
+    encrypted_message = open(filename, "r").read()
+    decrypted_message = ""
+    if mode == "decode":
+        # change 1,0 to .,-
+        emessage = list(encrypted_message)
+        for i in range(len(emessage)):
+            if emessage[i] == '1':
+                emessage[i] = '-'
+                encrypted_message = ''.join(emessage)
+            elif emessage[i] == '0':
+                emessage[i] = '.'
+                encrypted_message = ''.join(emessage)
+            elif emessage[i] == '/':
+                emessage[i] = '/'
+                encrypted_message = ''.join(emessage)
+            elif emessage[i] == ' ':
+                emessage[i] = ' '
+                encrypted_message = ''.join(emessage)
+        # split the mode into decrypt and encrypt
+        # if the mode is decrypt
+        line = encrypted_message.split(" ")
+        # calculate the answer of the morse code
+        # morse code dictionary
+        for i in range(len(line)):
+            for keys, values in morse_dic.items():
+                if values == line[i]:
+                    decrypted_message += keys
+        print(f"decoded morse message: \033[1;36m`{decrypted_message.lower()}`\033[1;0m")
+
+    if mode == "encode":
+        # change A,B to .,-
+        line = split(encrypted_message.upper())
+        for i in range(len(line)):
+            for keys, values in morse_dic.items():
+                if keys == line[i]:
+                    decrypted_message += values + " "
+        print(f"encoded morse: \033[1;36m`{decrypted_message}`\033[1;0m")
+        emessage = list(decrypted_message)
+        decrypted_bin = ''
+        for i in range(len(emessage)):
+            if emessage[i] == '-':
+                emessage[i] = '1'
+                decrypted_bin = ''.join(emessage)
+            elif emessage[i] == '.':
+                emessage[i] = '0'
+                decrypted_bin = ''.join(emessage)
+            elif emessage[i] == ' ':
+                emessage[i] = ' '
+                decrypted_bin = ''.join(emessage)
+            elif emessage[i] == '/':
+                emessage[i] = '/'
+                decrypted_bin = ''.join(emessage)
+        print(f"encoded binary: \033[1;36m`{decrypted_bin}`\033[1;0m")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='morse code encrypter and decrypter')
+    parser.add_argument('mode', help='encode or decode. Two form of encrypted messages: morse and binary form;\ndecrypted messages are in lower case message')
+    parser.add_argument('-f', '--file', help='file name for message you want to encrypt\n\033[1;31mdo not enter `~` as `/Users/<username>/`\033[1;0m\n')
+    args = parser.parse_args()
+    # call the main function
+    morse(args.file, args.mode)

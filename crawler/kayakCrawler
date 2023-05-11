@@ -1,0 +1,132 @@
+#!/usr/local/bin/python3
+# -*- coding: utf-8 -*-
+
+import time
+import argparse
+import requests
+from datetime import date, timedelta
+from prettytable import PrettyTable
+from bs4 import BeautifulSoup
+import airportsdata as air
+airports = air.load('IATA')
+PTables = PrettyTable()
+
+# creating banner
+def banners():
+    print(' ██ ▄█▀▄▄▄     ▓██   ██▓ ▄▄▄       ██ ▄█▀    ▄████▄   ██▀███   ▄▄▄       █     █░ ██▓    ▓█████  ██▀███  ')
+    print(' ██▄█▒▒████▄    ▒██  ██▒▒████▄     ██▄█▒    ▒██▀ ▀█  ▓██ ▒ ██▒▒████▄    ▓█░ █ ░█░▓██▒    ▓█   ▀ ▓██ ▒ ██▒')
+    print('▓███▄░▒██  ▀█▄   ▒██ ██░▒██  ▀█▄  ▓███▄░    ▒▓█    ▄ ▓██ ░▄█ ▒▒██  ▀█▄  ▒█░ █ ░█ ▒██░    ▒███   ▓██ ░▄█ ▒')
+    print('▓██ █▄░██▄▄▄▄██  ░ ▐██▓░░██▄▄▄▄██ ▓██ █▄    ▒▓▓▄ ▄██▒▒██▀▀█▄  ░██▄▄▄▄██ ░█░ █ ░█ ▒██░    ▒▓█  ▄ ▒██▀▀█▄  ')
+    print('▒██▒ █▄▓█   ▓██▒ ░ ██▒▓░ ▓█   ▓██▒▒██▒ █▄   ▒ ▓███▀ ░░██▓ ▒██▒ ▓█   ▓██▒░░██▒██▓ ░██████▒░▒████▒░██▓ ▒██▒')
+    print('▒ ▒▒ ▓▒▒▒   ▓▒█░  ██▒▒▒  ▒▒   ▓▒█░▒ ▒▒ ▓▒   ░ ░▒ ▒  ░░ ▒▓ ░▒▓░ ▒▒   ▓▒█░░ ▓░▒ ▒  ░ ▒░▓  ░░░ ▒░ ░░ ▒▓ ░▒▓░')
+    print('░ ░▒ ▒░ ▒   ▒▒ ░▓██ ░▒░   ▒   ▒▒ ░░ ░▒ ▒░     ░  ▒     ░▒ ░ ▒░  ▒   ▒▒ ░  ▒ ░ ░  ░ ░ ▒  ░ ░ ░  ░  ░▒ ░ ▒░')
+    print('░ ░░ ░  ░   ▒   ▒ ▒ ░░    ░   ▒   ░ ░░ ░    ░          ░░   ░   ░   ▒     ░   ░    ░ ░      ░     ░░   ░ ')
+    print('                                        \033[1;34m-=Author: Lucas Liu=-\033[1;0m                                            ')
+# find the iata code
+def IATA_code(airport):
+    airports_name = []
+    # check if the `airport` is IATA
+    if len(airport) == 3:
+        return airport
+    # else find the IATA
+    for i in range(len(airports)):
+        for keys, values in airports.items():
+            airports_name.append(values['name'])
+    index = airports_name.index(airport)
+    return list(airports.keys())[index]
+#! the main function
+def kayakCrawler(departure_airport, arrival_airport, departure_date, flight_class, numof_passengers, numof_packages):
+    '''
+    departure_airport: the country you are leaving from
+    arrival_airport: the country you are going to
+    departure_date: only for roundtrip, the range of dates you are going to travel
+    flight_class: economy, business or first class
+    num_passengers: the number of passengers you are going with
+    numof_packages: the number of packages you are taking with
+    '''
+    headers = {"User-Agent": "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_8; en-US) AppleWebKit/532.8 (KHTML, like Gecko) Chrome/4.0.302.2 Safari/532.8"}
+    # check the departure date and today's date
+    if departure_date < date.today().strftime('%Y/%m/%d'):
+        print('\033[1;31m[!] The departure date you have entered is earlier than today\033[1;0m')
+        exit()
+    elif departure_date == date.today().strftime('%Y/%m/%d'):
+        print('\033[1;31m[!] It is a little rush to go to the airport, maybe try with a different date\033[1;0m')
+        exit()
+    # enter all the parameters into the url and get the html code
+    if flight_class == 'economy' and numof_packages[0] == 0 and numof_packages[1] == 0:
+        resp = requests.get(f'https://www.kayak.co.uk/flights/{IATA_code(departure_airport)}-{IATA_code(arrival_airport)}/{departure_date.replace("/", "-")}/{numof_passengers}adults?&sort=bestflight_a', headers=headers)
+    elif flight_class == 'economy' and numof_packages[0] == 0:
+        resp = requests.get(f'https://www.kayak.co.uk/flights/{IATA_code(departure_airport)}-{IATA_code(arrival_airport)}/{departure_date.replace("/", "-")}/{numof_passengers}adults?fs=bfc={numof_packages[1]}&sort=bestflight_a', headers=headers)
+    elif flight_class == 'economy' and numof_packages[1] == 0:
+        resp = requests.get(f'https://www.kayak.co.uk/flights/{IATA_code(departure_airport)}-{IATA_code(arrival_airport)}/{departure_date.replace("/", "-")}/{numof_passengers}adults?fs=cfc={numof_packages[0]}&sort=bestflight_a', headers=headers)
+    else:
+        resp = requests.get(f'https://www.kayak.co.uk/flights/{IATA_code(departure_airport)}-{IATA_code(arrival_airport)}/{departure_date.replace("/", "-")}/{flight_class}/{numof_passengers}adults?fs=cfc={numof_packages[0]};bfc={numof_packages[1]}&sort=bestflight_a', headers=headers)
+    # checking the status code
+    if resp.status_code == 200:
+        print(f'\033[1;35m[*] Status code: {resp.status_code} OK\033[1;0m')
+        time.sleep(0.5)
+        print('\033[1;32m[+] Successfully connected to the website\033[1;0m')
+        soup = BeautifulSoup(resp.text, 'html.parser')
+        time.sleep(1)
+    else:
+        print(f'\033[1;31m[!] The website is not available right now, Status code: `{resp.status_code}`\033[1;0m')
+        exit()
+    # grab the information of the flights
+    print('\033[1;35m[*] Flights information generating...\033[1;0m')
+    # creating a empty list to store the informations
+    departure_time_list = []
+    arrival_time_list = []
+    duration_list = []
+    price_list = []
+    airline_list = []
+    # find all the informations from the website
+    departure_time = soup.find_all('span', attrs={'class': 'depart-time base-time'})
+    for i in departure_time:
+        departure_time_list.append(i.text)
+    arrival_time = soup.find_all('span', attrs={'class': 'arrival-time base-time'})
+    for i in arrival_time:
+        arrival_time_list.append(i.text)
+    flight_duration = soup.find_all('div', attrs={'class': 'section duration allow-multi-modal-icons'})
+    for i in flight_duration:
+        duration_list.append(i.text.replace('\n', '').replace('m ', 'min'))
+    flight_price = soup.find_all('span', attrs={'class': 'price-text'})
+    for i in flight_price:
+        price_list.append(i.text.replace('\n', ''))
+    airline = soup.find_all('span', attrs={'class': 'codeshares-airline-names'})
+    for i in airline:
+        airline_list.append(i.text)
+    time.sleep(len(departure_time_list)*0.5)
+    if len(departure_time_list) == 0:
+        print('\033[1;34m+--------------------------------------------------+\033[1;0m')
+        print('\033[1;34m| \033[1;31m[!] No airlines found, try with a different date\033[1;34m |\033[1;0m')
+        print('\033[1;34m+--------------------------------------------------+\033[1;0m')
+        exit()
+    # print('\033[1;32m[+] Successfully generated the flights information\033[1;0m')
+    # PTables.field_names = ['Departure', 'Arrival', 'Duration', 'Price', 'Airlines']
+    print('\033[42m\033[1;32m[+]\033[1;0m: The best flight')
+    # find the longest string in the list
+    lens = len(max(airline_list, key=len))
+    print(f'\033[1;34m+'+'\033[1;34m-'*(lens+101)+'+\033[1;0m')
+    for i in range(len(departure_time_list)):
+        # find the minimum price and highlight it
+        if price_list[i].replace('£', '').replace(',', '') == str(min(int(price_list[i].replace('£', '').replace(',', '')) for i in range(len(price_list))))+' ' and duration_list[i].replace('h', '').replace('min', '').split(' ')[0] == str(min(int(duration_list[i].replace('h', '').replace('min', '').split(' ')[0]) for i in range(len(duration_list)))):
+            print(f' \033[42m\033[1;32m[+]\033[1;0m Departure time:\033[1;36m`{departure_time_list[i]}`\033[1;0m, Arrival time:\033[1;36m`{arrival_time_list[i]}`\033[1;0m, Duration:\033[1;36m`{duration_list[i]}`\033[1;0m, Price:\033[1;36m`{price_list[i]}pp`\033[1;0m, Airline:\033[1;36m`{airline_list[i]}`\033[1;0m')
+        else:
+            print(f' \033[1;32m[+]\033[1;0m Departure time:\033[1;36m`{departure_time_list[i]}`\033[1;0m, Arrival time:\033[1;36m`{arrival_time_list[i]}`\033[1;0m, Duration:\033[1;36m`{duration_list[i]}`\033[1;0m, Price:\033[1;36m`{price_list[i]}pp`\033[1;0m, Airline:\033[1;36m`{airline_list[i]}`\033[1;0m')
+        # PTables.add_row([departure_time_list[i], arrival_time_list[i], duration_list[i], price_list[i], airline_list[i]])
+        time.sleep(0.5)
+    print(f'\033[1;34m+'+'\033[1;34m-'*(lens+101)+'+\033[1;0m')
+    # print(PTables)
+
+#! the argument function
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description=banners())
+    parser.add_argument('-da', '--departure_airport', help='the airport you are leaving from, \033[1;31mplease enter the IATA code if you know\033[1;36m(LHR)\033[1;0m\nIf not, \033[1;31menter the full name of the airport\033[1;36m(London Heathrow Airport)\033[1;0m', required=True, type=str)
+    parser.add_argument('-aa', '--arrival_airport', help='the airport you are going to, \033[1;31msame as departure city\033[1;0m', required=True, type=str)
+    parser.add_argument('-date', '--departure_date', help='the date you want to leaving from, \033[1;31mthe date format:\033[1;36m`yyyy/mm/dd`\033[1;0m', default=(date.today()+timedelta(days=1)).strftime('%Y/%m/%d'), type=str)
+    parser.add_argument('-class', '--flight_class', help='flight class: \033[1;31meconomy, business or first class\033[1;36m(first)\033[1;0m', type=str, default='economy')
+    parser.add_argument('-n', '--numof_passengers', help='the number of passengers as number of adults', type=int)
+    parser.add_argument('-np', '--numof_packages', help='the number of packages: \033[1;36m<numof_carry_packages> <numof_checked_packages>\033[1;0m\nThe first number is the number of \033[1;34mcarry-on bags\033[1;0m\nThe second number is the number of \033[1;34mchecked bags\033[1;0m', type=int, nargs=2)
+    args = parser.parse_args()
+    # call the function
+    kayakCrawler(args.departure_airport, args.arrival_airport, args.departure_date, args.flight_class, args.numof_passengers, args.numof_packages)

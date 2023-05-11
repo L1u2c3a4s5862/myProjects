@@ -1,0 +1,95 @@
+#!/usr/local/bin/python3
+# -*- coding: utf-8 -*-
+
+import time
+import random
+import argparse
+
+# generate banner
+banner = """
+ ██▓     ██▓ ▄████▄  ▓█████  ███▄    █   ██████ ▓█████      ▄████ ▓█████  ███▄    █ 
+▓██▒    ▓██▒▒██▀ ▀█  ▓█   ▀  ██ ▀█   █ ▒██    ▒ ▓█   ▀     ██▒ ▀█▒▓█   ▀  ██ ▀█   █ 
+▒██░    ▒██▒▒▓█    ▄ ▒███   ▓██  ▀█ ██▒░ ▓██▄   ▒███      ▒██░▄▄▄░▒███   ▓██  ▀█ ██▒
+▒██░    ░██░▒▓▓▄ ▄██▒▒▓█  ▄ ▓██▒  ▐▌██▒  ▒   ██▒▒▓█  ▄    ░▓█  ██▓▒▓█  ▄ ▓██▒  ▐▌██▒
+░██████▒░██░▒ ▓███▀ ░░▒████▒▒██░   ▓██░▒██████▒▒░▒████▒   ░▒▓███▀▒░▒████▒▒██░   ▓██░
+░ ▒░▓  ░░▓  ░ ░▒ ▒  ░░░ ▒░ ░░ ▒░   ▒ ▒ ▒ ▒▓▒ ▒ ░░░ ▒░ ░    ░▒   ▒ ░░ ▒░ ░░ ▒░   ▒ ▒ 
+\033[1;35m                                -=Author: Lucas Liu=-                                \033[1;0m
+"""
+def banners(banner):
+    print(banner)
+
+#! the main function
+#! China
+# list of Chinese province abbrevitations
+provinces = ['京', '津', '沪', '渝', '冀', '豫', '云', '辽', '黑', '湘', '皖', '鲁',
+             '新', '苏', '浙', '赣', '鄂', '桂', '甘', '晋', '蒙', '陕', '吉', '闽', '贵',
+             '粤', '青', '藏', '川', '宁', '琼', '使', '领', '警', '学', '港', '澳']
+# list of city code that can be used in license plates
+cities = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M',
+         'L', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y']
+# list of letters and number that can be used in license plates
+chars = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S',
+         'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+#! UK
+# Define lists of valid characters for each section of the license plate
+letters_uk = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K','L',
+         'M', 'N', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y']
+numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
+#! US
+# Define lists of valid characters for each section of the license plate
+letters_us = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+         'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+#! Japan
+# Define lists of valid characters for each section of the license plate
+letters_jp = ['あ', 'い', 'う', 'え', 'お', 'か', 'き', 'く', 'け', 'こ', 'さ', 'し', 'す', 'せ', 'そ',
+             'た', 'ち', 'つ', 'て', 'と', 'な', 'に', 'ぬ', 'ね', 'の', 'は', 'ひ', 'ふ', 'へ', 'ほ', 
+             'ま', 'み', 'む', 'め', 'も', 'や', 'ゆ', 'よ', 'ら', 'り', 'る', 'れ', 'ろ', 'わ', 'を', 'ん']
+# generate the Chinese license plates
+def generate_license(nation, num):
+    # generate the Chinese license plates
+    if nation == "ch":
+        print(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
+        time.sleep(1)
+        for i in range(num):
+            province = random.choice(provinces)
+            city = random.choice(cities)
+            letters = "".join([str(random.choice(chars)) for i in range(5)])
+            print(f"{province}{city}·{letters}")
+            time.sleep(0.05)
+    # generate the UK license plates
+    elif nation == "uk":
+        print(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
+        time.sleep(1)
+        for i in range(num):
+            first = "".join([str(random.choice(letters_uk)) for i in range(2)])
+            second = "".join([str(random.choice(numbers)) for i in range(2)])
+            third = "".join([str(random.choice(letters_uk)) for i in range(3)])
+            print(f"{first}{second}{third}")
+            time.sleep(0.05)
+    # generate the US license plates
+    elif nation == "us":
+        print(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
+        time.sleep(1)
+        for i in range(num):
+            first = "".join([str(random.choice(letters_us)) for i in range(3)])
+            second = "".join([str(random.choice(numbers)) for i in range(4)])
+            print(f"{first}{second}")
+            time.sleep(0.05)
+    # generate the Japan license plates
+    elif nation == "jp":
+        print(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
+        time.sleep(1)
+        for i in range(num):
+            first = "".join([str(random.choice(letters_jp)) for i in range(3)])
+            second = "".join([str(random.choice(numbers)) for i in range(4)])
+            print(f"{first}{second}")
+            time.sleep(0.05)
+
+# parse arguments
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=banners(banner))
+    parser.add_argument("nation", type=str, help="nation of license plates to generate. \033[1;34m(ch/china, uk, us, jp)\033[1;0m")
+    parser.add_argument("number", type=int, default=1, help="number of license plates to generate")
+    args = parser.parse_args()
+
+    generate_license(args.nation, args.number)

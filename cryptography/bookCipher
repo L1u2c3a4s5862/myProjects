@@ -1,0 +1,84 @@
+#!/usr/local/bin/python3
+# -*- coding: utf-8 -*-
+
+import argparse
+import PyPDF2
+import string
+import os
+import re
+
+# banner
+def banners():
+    print(' ▄▄▄▄    ▒█████   ▒█████   ██ ▄█▀    ▄████▄   ██▓ ██▓███   ██░ ██ ▓█████  ██▀███  ')
+    print('▓█████▄ ▒██▒  ██▒▒██▒  ██▒ ██▄█▒    ▒██▀ ▀█  ▓██▒▓██░  ██▒▓██░ ██▒▓█   ▀ ▓██ ▒ ██▒')
+    print('▒██▒ ▄██▒██░  ██▒▒██░  ██▒▓███▄░    ▒▓█    ▄ ▒██▒▓██░ ██▓▒▒██▀▀██░▒███   ▓██ ░▄█ ▒')
+    print('▒██░█▀  ▒██   ██░▒██   ██░▓██ █▄    ▒▓▓▄ ▄██▒░██░▒██▄█▓▒ ▒░▓█ ░██ ▒▓█  ▄ ▒██▀▀█▄  ')
+    print('░▓█  ▀█▓░ ████▓▒░░ ████▓▒░▒██▒ █▄   ▒ ▓███▀ ░░██░▒██▒ ░  ░░▓█▒░██▓░▒████▒░██▓ ▒██▒')
+    print('░▒▓███▀▒░ ▒░▒░▒░ ░ ▒░▒░▒░ ▒ ▒▒ ▓▒   ░ ░▒ ▒  ░░▓  ▒▓▒░ ░  ░ ▒ ░░▒░▒░░ ▒░ ░░ ▒▓ ░▒▓░')
+    print('▒░▒   ░   ░ ▒ ▒░   ░ ▒ ▒░ ░ ░▒ ▒░     ░  ▒    ▒ ░░▒ ░      ▒ ░▒░ ░ ░ ░  ░  ░▒ ░ ▒░')
+    print('                              \033[1;35m-=Author: Lucas Liu=-\033[1;0m                               ')
+
+# main function `bookCipher`
+def bookCipher(message, book, mode):
+    # open the book
+    # if the book file as .pdf of .txt extension
+    # if the book file as .pdf file
+    if book.endswith('.pdf'):
+        pdfFileObj = PyPDF2.pdfFileReader(open(book, 'rb'))
+        # get the number of pages
+        pages = pdfFileObj.numPages
+        pageObj = pdfFileObj.getPage(pages+1)
+        # create book cipher keys for all pages
+        pdfContent = pagesObj.extractText()
+        # write pdf content as .txt file
+        with open(book.replace('.pdf', '.txt'), 'w') as f:
+            f.write(pdfContent)
+        # open the book cipher keys
+        with open(book.replace('.pdf', '.txt'), 'r') as f:
+            bookmark = f.read().translate(str.maketrans('','',string.punctuation))
+        print(f'\033[1;32m[+]\033[1;36mbook code has been created successfully at {book.replace(".pdf", ".txt")}\033[1;0m')
+    # if the book file as .txt file
+    elif book.endswith('.txt'):
+        with open(book, 'r') as f:
+            bookmark = f.read().translate(str.maketrans('','',string.punctuation))
+    
+    # choose the mode
+    # if the mode is encode
+    if mode == 'encode':
+        encrypted_message = ''
+        cood = []
+        # find the row number and the word number of the book cipher keys
+        dim = [bookmark.split('\n')[i].split(' ') for i in range(len(bookmark.split('\n')))]
+        for code_len in range(len(message.translate(str.maketrans('','',string.punctuation)).split(' '))):
+            for index, row in enumerate(dim):
+                if message.translate(str.maketrans('','',string.punctuation)).split(' ')[code_len] in row:
+                    pos = [index, row.index(message.translate(str.maketrans('','',string.punctuation)).split(' ')[code_len])]
+                    cood.append(pos)
+            # print out the rows and columns as the form of `{row}:{col}`
+            encrypted_message += f'{cood[code_len][0]+1}:{cood[code_len][1]+1} '
+        print(f'\033[1;32m[+]\033[1;0m The encoded message: \033[1;36m`{encrypted_message}`\033[1;0m')
+    # if the mode is decode
+    elif mode == 'decode':
+        decrypted_message = ''
+        row = []
+        col = []
+        message_num = []
+        # find the row and word number from the `message`
+        dim = [bookmark.split('\n')[i].split(' ') for i in range(len(bookmark.split('\n')))]
+        splited_message = message.split(' ')
+        code_len = len(splited_message)
+        for i in range(code_len):
+            message_num.append(splited_message[i].split(':'))
+            row.append(message_num[i][0])
+            col.append(message_num[i][1])
+            decrypted_message += f'{dim[int(row[i])-1][int(col[i])-1]} '
+        print(f'\033[1;32m[+]\033[1;0m The decoded message: \033[1;36m`{decrypted_message}`\033[1;0m')
+    
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description=banners())
+    parser.add_argument('-m', '--message', help='choose the message to encode or decode, when message as the .txt file,\n\033[1;31mdo not write `~` as the `/Users/username`\033[1;0m')
+    parser.add_argument('-b', '--book', help='choose the book file, you can use the .txt file as the book instead .pdf file\nor using your own .txt file that you wrote')
+    parser.add_argument('-M', '--mode', help='choose the mode:\nencode or decode, encode mode will encrypt to `row:col` form\ndecode mode will decode to plain text', choices=['encode', 'decode'], default='encode')
+    args = parser.parse_args()
+    # call the main function
+    bookCipher(args.message, args.book, args.mode)
