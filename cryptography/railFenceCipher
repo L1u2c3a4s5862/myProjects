@@ -1,0 +1,79 @@
+#!/usr/local/bin/python3
+# -*- coding: utf-8 -*-
+
+import argparse
+
+banner = """
+ ██▀███   ▄▄▄       ██▓ ██▓         █████▒▓█████  ███▄    █  ▄████▄  ▓█████ 
+▓██ ▒ ██▒▒████▄    ▓██▒▓██▒       ▓██   ▒ ▓█   ▀  ██ ▀█   █ ▒██▀ ▀█  ▓█   ▀ 
+▓██ ░▄█ ▒▒██  ▀█▄  ▒██▒▒██░       ▒████ ░ ▒███   ▓██  ▀█ ██▒▒▓█    ▄ ▒███   
+▒██▀▀█▄  ░██▄▄▄▄██ ░██░▒██░       ░▓█▒  ░ ▒▓█  ▄ ▓██▒  ▐▌██▒▒▓▓▄ ▄██▒▒▓█  ▄ 
+░██▓ ▒██▒ ▓█   ▓██▒░██░░██████▒   ░▒█░    ░▒████▒▒██░   ▓██░▒ ▓███▀ ░░▒████▒
+░ ▒▓ ░▒▓░ ▒▒   ▓▒█░░▓  ░ ▒░▓  ░    ▒ ░    ░░ ▒░ ░░ ▒░   ▒ ▒ ░ ░▒ ▒  ░░░ ▒░ ░
+\033[1;35m                           -=Author: Lucas Liu=-                           \033[1;0m
+"""
+def banners(banner):
+    print(banner)
+
+# rail fence cipher encryption
+def rf_encrypt(text, num_rails):
+    rails = [[] for _ in range(num_rails)]
+    rail = 0
+    direction = 1
+    for char in text:
+        rails[rail].append(char)
+        if rail == 0:
+            direction = 1
+        elif rail == num_rails - 1:
+            direction = -1
+        rail += direction
+    encrypted = ''.join([''.join(rail) for rail in rails])
+    return encrypted
+
+# rail fence cipher decryption
+def rf_decrypt(encrypted, num_rails):
+    rails = [[] for _ in range(num_rails)]
+    rail_lengths = [0] * num_rails
+    rail = 0
+    direction = 1
+    for _ in encrypted:
+        rail_lengths[rail] += 1
+        if rail == 0:
+            direction = 1
+        elif rail == num_rails - 1:
+            direction = -1
+        rail += direction
+    i = 0
+    for rail in range(num_rails):
+        for _ in range(rail_lengths[rail]):
+            rails[rail].append(encrypted[i])
+            i += 1
+    rail = 0
+    direction = 1
+    decrypted = ''
+    for _ in encrypted:
+        decrypted += rails[rail].pop(0)
+        if rail == 0:
+            direction = 1
+        elif rail == num_rails - 1:
+            direction = -1
+        rail += direction
+    return decrypted
+
+# main function
+def rfCipher(text, num_rails, mode):
+    if mode == 'encode':
+        encrypted = rf_encrypt(text, num_rails)
+        print(f"Encrypted: \033[1;35m{encrypted}\033[1;0m")
+    elif mode == 'decode':
+        decrypted = rf_decrypt(text, num_rails)
+        print(f"Decrypted: \033[1;35m{decrypted}\033[1;0m")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=banners(banner))
+    parser.add_argument('text', help='Text to be encrypted/decrypted')
+    parser.add_argument('num_rails', type=int, help='Number of rails')
+    parser.add_argument('mode', help='Mode: encode/decode')
+    args = parser.parse_args()
+    # Encrypt or decrypt the text
+    rfCipher(args.text, args.num_rails, args.mode)
