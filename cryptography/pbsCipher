@@ -1,0 +1,79 @@
+#!/usr/local/bin/python3
+# -*- coding: utf-8 -*-
+
+import argparse
+
+banner = """
+ ██▓███   ▒█████   ██▓   ▓██   ██▓ ▄▄▄▄    ██▓ █    ██   ██████      ██████   █████   █    ██  ▄▄▄       ██▀███  ▓█████ 
+▓██░  ██▒▒██▒  ██▒▓██▒    ▒██  ██▒▓█████▄ ▓██▒ ██  ▓██▒▒██    ▒    ▒██    ▒ ▒██▓  ██▒ ██  ▓██▒▒████▄    ▓██ ▒ ██▒▓█   ▀ 
+▓██░ ██▓▒▒██░  ██▒▒██░     ▒██ ██░▒██▒ ▄██▒██▒▓██  ▒██░░ ▓██▄      ░ ▓██▄   ▒██▒  ██░▓██  ▒██░▒██  ▀█▄  ▓██ ░▄█ ▒▒███   
+▒██▄█▓▒ ▒▒██   ██░▒██░     ░ ▐██▓░▒██░█▀  ░██░▓▓█  ░██░  ▒   ██▒     ▒   ██▒░██  █▀ ░▓▓█  ░██░░██▄▄▄▄██ ▒██▀▀█▄  ▒▓█  ▄ 
+▒██▒ ░  ░░ ████▓▒░░██████▒ ░ ██▒▓░░▓█  ▀█▓░██░▒▒█████▓ ▒██████▒▒   ▒██████▒▒░▒███▒█▄ ▒▒█████▓  ▓█   ▓██▒░██▓ ▒██▒░▒████▒
+▒▓▒░ ░  ░░ ▒░▒░▒░ ░ ▒░▓  ░  ██▒▒▒ ░▒▓███▀▒░▓  ░▒▓▒ ▒ ▒ ▒ ▒▓▒ ▒ ░   ▒ ▒▓▒ ▒ ░░░ ▒▒░ ▒ ░▒▓▒ ▒ ▒  ▒▒   ▓▒█░░ ▒▓ ░▒▓░░░ ▒░ ░
+░▒ ░       ░ ▒ ▒░ ░ ░ ▒  ░▓██ ░▒░ ▒░▒   ░  ▒ ░░░▒░ ░ ░ ░ ░▒  ░ ░   ░ ░▒  ░ ░ ░ ▒░  ░ ░░▒░ ░ ░   ▒   ▒▒ ░  ░▒ ░ ▒░ ░ ░  ░
+░░       ░ ░ ░ ▒    ░ ░   ▒ ▒ ░░   ░    ░  ▒ ░ ░░░ ░ ░ ░  ░  ░     ░  ░  ░     ░   ░  ░░░ ░ ░   ░   ▒     ░░   ░    ░   
+\033[1;35m                                                 -=Author: Lucas Liu=-                                                 \033[1;0m
+"""
+def banners(banner):
+    print(banner)
+
+def pbs_encrypt(text):
+    # Define the Polybius square
+    polybius_square = {
+        'A': '11', 'B': '12', 'C': '13', 'D': '14', 'E': '15', # 'I' and 'J' share the same code
+        'F': '21', 'G': '22', 'H': '23', 'I': '24', 'J': '24',
+        'K': '25', 'L': '31', 'M': '32', 'N': '33', 'O': '34',
+        'P': '35', 'Q': '41', 'R': '42', 'S': '43', 'T': '44',
+        'U': '45', 'V': '51', 'W': '52', 'X': '53', 'Y': '54', 'Z': '55'
+    }
+    # Convert text to upper case
+    text = text.upper()
+    # Encrypt the text
+    encrypted = ''
+    for char in text:
+        if char in polybius_square:
+            encrypted += polybius_square[char]
+        else:
+            encrypted += char  # Keep the character as it is if it's not in the Polybius square
+    return encrypted
+
+def pbs_decrypt(encrypted):
+    # Define the Polybius square
+    polybius_square = {
+        '11': 'A', '12': 'B', '13': 'C', '14': 'D', '15': 'E', # 'I' and 'J' share the same code
+        '21': 'F', '22': 'G', '23': 'H', '24': 'I/J', '25': 'K',
+        '31': 'L', '32': 'M', '33': 'N', '34': 'O', '35': 'P',
+        '41': 'Q', '42': 'R', '43': 'S', '44': 'T', '45': 'U',
+        '51': 'V', '52': 'W', '53': 'X', '54': 'Y', '55': 'Z'
+    }
+    # Decrypt the text
+    decrypted = ''
+    i = 0
+    while i < len(encrypted):
+        if encrypted[i:i+2] in polybius_square:
+            decrypted += polybius_square[encrypted[i:i+2]]
+            i += 2
+        else:
+            # Keep the character as it is if it's not in the Polybius square
+            decrypted += encrypted[i]
+            i += 1
+    return decrypted
+
+def pbs(text, mode):
+    # Encrypt the text
+    if mode == "encode":
+        encrypted = pbs_encrypt(text)
+        print(f"Encrypted: \033[1;35m{encrypted}\033[1;0m")
+    # Decrypt the text
+    elif mode == "decode":
+        decrypted = pbs_decrypt(text)
+        print(f"Decrypted: \033[1;35m{decrypted}\033[1;0m")
+
+if __name__ == "__main__":
+    # Parse the arguments
+    parser = argparse.ArgumentParser(description=banners(banner))
+    parser.add_argument("text", help="text to be encrypted/decrypted")
+    parser.add_argument("mode", help="encrypt or decrypt the text")
+    args = parser.parse_args()
+    # Encrypt or decrypt the text
+    pbs(args.text, args.mode)
