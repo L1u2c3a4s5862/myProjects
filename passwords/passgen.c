@@ -7,7 +7,7 @@
 // Default values for password generation
 #define DEFAULT_LENGTH 12
 #define DEFAULT_COUNT 5
-#define DEFAULT_CHARS "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+{}[]|\\:;\"'<>,.?/ "
+#define DEFAULT_CHARS "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\\!@#$%^&*()-_=+{}[]|\\:;\\\"'<>,.?/ "
 
 // Function to generate a random password of a given length and character set
 char* generate_password(int length, const char* chars) {
