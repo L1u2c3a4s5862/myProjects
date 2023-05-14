@@ -76,9 +76,9 @@ def bookCipher(message, book, mode):
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description=banners())
-    parser.add_argument('-m', '--message', help='choose the message to encode or decode, when message as the .txt file,\n\033[1;31mdo not write `~` as the `/Users/username`\033[1;0m')
+    parser.add_argument('message', help='choose the message to encode or decode, when message as the .txt file,\n\033[1;31mdo not write `~` as the `/Users/username`\033[1;0m')
     parser.add_argument('-b', '--book', help='choose the book file, you can use the .txt file as the book instead .pdf file\nor using your own .txt file that you wrote')
-    parser.add_argument('-M', '--mode', help='choose the mode:\nencode or decode, encode mode will encrypt to `row:col` form\ndecode mode will decode to plain text', choices=['encode', 'decode'], default='encode')
+    parser.add_argument('mode', help='choose the mode:\nencode or decode, encode mode will encrypt to `row:col` form\ndecode mode will decode to plain text')
     args = parser.parse_args()
     # call the main function
     bookCipher(args.message, args.book, args.mode)
