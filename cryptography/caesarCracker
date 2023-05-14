@@ -22,12 +22,8 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser(
         formatter_class=argparse.RawTextHelpFormatter,
         description='Full Caesar Cipher Decypter')
-	parser.add_argument(
-		"-m", "--message",
-		default=None, help="message you want to decrypt")
-	parser.add_argument(
-		"-s", "--symbol",
-		default=None, help="symbols for decypter")
+	parser.add_argument("message", default=None, help="message you want to decrypt")
+	parser.add_argument("-s", "--symbol", default=None, help="symbols for decypter")
 	args = parser.parse_args()
 	if args.symbol is None:
 		args.symbol = string.printable.replace(' \t\n\r\x0b\x0c', '')
