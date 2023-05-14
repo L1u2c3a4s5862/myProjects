@@ -31,6 +31,13 @@ int main(int argc, char* argv[]) {
     while ((opt = getopt(argc, argv, "hl:n:c:")) != -1) {
         switch (opt) {
             case 'h':
+                printf(" ██▓███   ▄▄▄        ██████   ██████   ▄████ ▓█████  ███▄    █ \n"
+                       "▓██░  ██▒▒████▄    ▒██    ▒ ▒██    ▒  ██▒ ▀█▒▓█   ▀  ██ ▀█   █ \n"
+                       "▓██░ ██▓▒▒██  ▀█▄  ░ ▓██▄   ░ ▓██▄   ▒██░▄▄▄░▒███   ▓██  ▀█ ██▒\n"
+                       "▒██▄█▓▒ ▒░██▄▄▄▄██   ▒   ██▒  ▒   ██▒░▓█  ██▓▒▓█  ▄ ▓██▒  ▐▌██▒\n"
+                       "▒██▒ ░  ░ ▓█   ▓██▒▒██████▒▒▒██████▒▒░▒▓███▀▒░▒████▒▒██░   ▓██░\n"
+                       "▒▓▒░ ░  ░ ▒▒   ▓▒█░▒ ▒▓▒ ▒ ░▒ ▒▓▒ ▒ ░ ░▒   ▒ ░░ ▒░ ░░ ▒░   ▒ ▒ \n"
+                       "\033[1;35m                     -=Author: Lucas Liu=-                     \033[1;0m\n\n");
                 printf("Usage: %s [-h] [-l LENGTH] [-n NUMBER] [-c CHARS]\n", argv[0]);
                 printf("\nOptions:\n");
                 printf("  -h               Show this help message and exit\n");
