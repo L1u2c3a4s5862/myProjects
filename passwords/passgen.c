@@ -9,7 +9,6 @@
 #define DEFAULT_LENGTH 12
 #define DEFAULT_COUNT 5
 #define DEFAULT_CHARS "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+{}[]|\\:;\"'<>,.?/ "
-#define PRINTABLE_CHARS "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\\!@#$%^&*()-_=+{}[]|\\:;\\\"'<>,.?/ "
 
 // Function to generate a random password of a given length and character set
 char* generate_password(int length, const char* chars) {
@@ -38,7 +37,7 @@ int main(int argc, char* argv[]) {
                 printf("  -l LENGTH        Length of each password (default: \033[1;34m%d\033[1;0m)\n", DEFAULT_LENGTH);
                 printf("  -n NUMBER        Number of passwords to generate (default: \033[1;34m%d\033[1;0m)\n", DEFAULT_COUNT);
                 printf("  -c CHARS         Characters to use for password generation\n");
-                printf("                   (default: \033[1;34m\"%s\"\033[1;0m)\n", PRINTABLE_CHARS);
+                printf("                   (default: \033[1;34m\"%s\"\033[1;0m)\n", DEFAULT_CHARS);
                 return 0;
             case 'l':
                 length = atoi(optarg);
