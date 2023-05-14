@@ -9,10 +9,10 @@ void printHelp() {
     cout << "Password Generator Help:\n"
          << "Usage: passwordgen [options]\n"
          << "Options:\n"
-         << "  -l <length>  : Specify password length\n"
-         << "  -n <number>  : Specify number of passwords to generate\n"
-         << "  -c <chars>   : Specify characters to include in passwords\n"
-         << "  -h           : Display this help message\n";
+         << "  -l <length>  Specify password length\n"
+         << "  -n <number>  Specify number of passwords to generate\n"
+         << "  -c <chars>   Specify characters to include in passwords\n"
+         << "  -h           Display this help message\n";
 }
 
 void generatePasswords(int length, int number, const char* chars) {
@@ -37,7 +37,7 @@ void generatePasswords(int length, int number, const char* chars) {
 int main(int argc, char* argv[]) {
     int length = 8;
     int number = 1;
-    const char *chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+{}[]|\\:;\"'<>,.?/ ";
+    const char *chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\\!@#$%^&*()-_=+{}[]|\\:;\\\"'<>,.?/ ";
 
     // parse command line arguments
     for (int i = 1; i < argc; i++) {
