@@ -1,0 +1,52 @@
+#!/usr/local/bin/python3
+# -*- coding: utf-8 -*-
+
+import argparse
+
+# get banners
+banner = """
+ ███▄ ▄███▓ ▒█████   ███▄    █  ▒█████   ▄▄▄       ██▓     ██▓███   ██░ ██  ▄▄▄      
+▓██▒▀█▀ ██▒▒██▒  ██▒ ██ ▀█   █ ▒██▒  ██▒▒████▄    ▓██▒    ▓██░  ██▒▓██░ ██▒▒████▄    
+▓██    ▓██░▒██░  ██▒▓██  ▀█ ██▒▒██░  ██▒▒██  ▀█▄  ▒██░    ▓██░ ██▓▒▒██▀▀██░▒██  ▀█▄  
+▒██    ▒██ ▒██   ██░▓██▒  ▐▌██▒▒██   ██░░██▄▄▄▄██ ▒██░    ▒██▄█▓▒ ▒░▓█ ░██ ░██▄▄▄▄██ 
+▒██▒   ░██▒░ ████▓▒░▒██░   ▓██░░ ████▓▒░ ▓█   ▓██▒░██████▒▒██▒ ░  ░░▓█▒░██▓ ▓█   ▓██▒
+░ ▒░   ░  ░░ ▒░▒░▒░ ░ ▒░   ▒ ▒ ░ ▒░▒░▒░  ▒▒   ▓▒█░░ ▒░▓  ░▒▓▒░ ░  ░ ▒ ░░▒░▒ ▒▒   ▓▒█░
+\033[1;35m                                -=Author: Lucas Liu=-                                \033[1;0m
+"""
+def banners(banner):
+    print(banner)
+
+# cipher function
+def monoAlphaCipher(message):
+    # define subsitution dict
+    cipher_map = {'a': 'm', 'b': 'u', 'c': 'a', 'd': 'l', 'e': 'v', 'f': 'o', 'g': 'z', 'h': 'k',
+                  'i': 'r', 'j': 'n', 'k': 'j', 'l': 'x', 'm': 'q', 'n': 'd', 'o': 'f', 'p': 's', 
+                  'q': 'h', 'r': 'p', 's': 'e', 't': 'b', 'u': 'c', 'v': 't', 'w': 'i', 'x': 'w', 
+                  'y': 'y', 'z': 'g'
+    }
+    cipher_text = ''
+    for char in message:
+        if char.isalpha():
+            if char.isupper():
+                # For uppercase characters
+                cipher_text += cipher_map[char.lower()].upper()
+            else:
+                cipher_text += cipher_map[char]  # For lowercase characters
+        else:
+            cipher_text += char  # For non-alphabetic characters
+    return cipher_text
+
+# main function
+def monoAlpha(message, mode):
+    if mode == "encode":
+        print(f"Encoded message: \033[1;34m{monoAlphaCipher(message)}\033[1;0m")
+    elif mode == "decode":
+        print(f"Decoded message: \033[1;34m{monoAlphaCipher(message)}\033[1;0m")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=banners(banner))
+    parser.add_argument("message", help="Message for \033[1;35mencrypt/decrypt\033[1;0m")
+    parser.add_argument("mode", help="Mode for \033[1;35mencode/decode\033[1;0m")
+    args = parser.parse_args()
+
+    monoAlpha(args.message, args.mode)
