@@ -6,7 +6,7 @@
 #include <unistd.h>
 
 // Default values for password generation
-#define DEFAULT_LENGTH 12
+#define DEFAULT_LENGTH 8
 #define DEFAULT_COUNT 5
 #define DEFAULT_CHARS "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+{}[]|\\:;\"'<>,.?/ "
 
