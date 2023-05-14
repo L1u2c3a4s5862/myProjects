@@ -1,0 +1,48 @@
+#!/usr/local/bin/python3
+# -*- coding: utf-8 -*-
+
+import argparse
+
+# get banners
+banner = """
+ ▄▄▄     ▄▄▄█████▓ ▄▄▄▄    ▄▄▄        ██████  ██░ ██     ▄████▄   ██▓ ██▓███   ██░ ██ ▓█████  ██▀███  
+▒████▄   ▓  ██▒ ▓▒▓█████▄ ▒████▄    ▒██    ▒ ▓██░ ██▒   ▒██▀ ▀█  ▓██▒▓██░  ██▒▓██░ ██▒▓█   ▀ ▓██ ▒ ██▒
+▒██  ▀█▄ ▒ ▓██░ ▒░▒██▒ ▄██▒██  ▀█▄  ░ ▓██▄   ▒██▀▀██░   ▒▓█    ▄ ▒██▒▓██░ ██▓▒▒██▀▀██░▒███   ▓██ ░▄█ ▒
+░██▄▄▄▄██░ ▓██▓ ░ ▒██░█▀  ░██▄▄▄▄██   ▒   ██▒░▓█ ░██    ▒▓▓▄ ▄██▒░██░▒██▄█▓▒ ▒░▓█ ░██ ▒▓█  ▄ ▒██▀▀█▄  
+ ▓█   ▓██▒ ▒██▒ ░ ░▓█  ▀█▓ ▓█   ▓██▒▒██████▒▒░▓█▒░██▓   ▒ ▓███▀ ░░██░▒██▒ ░  ░░▓█▒░██▓░▒████▒░██▓ ▒██▒
+ ▒▒   ▓▒█░ ▒ ░░   ░▒▓███▀▒ ▒▒   ▓▒█░▒ ▒▓▒ ▒ ░ ▒ ░░▒░▒   ░ ░▒ ▒  ░░▓  ▒▓▒░ ░  ░ ▒ ░░▒░▒░░ ▒░ ░░ ▒▓ ░▒▓░
+  ▒   ▒▒ ░   ░    ▒░▒   ░   ▒   ▒▒ ░░ ░▒  ░ ░ ▒ ░▒░ ░     ░  ▒    ▒ ░░▒ ░      ▒ ░▒░ ░ ░ ░  ░  ░▒ ░ ▒░
+\033[1;25m                                        -=Author: Lucas Liu=                                        -\033[1;0m
+"""
+def banners(banner):
+    print(banner)
+
+# cipher function
+def atBashCipher(message):
+    cipher_text = ''
+    for char in message:
+        if char.isalpha():
+            if char.isupper():
+                # For uppercase characters
+                cipher_text += chr(90 - (ord(char) - 65))
+            else:
+                # For lowercase characters
+                cipher_text += chr(122 - (ord(char) - 97))
+        else:
+            cipher_text += char  # For non-alphabetic characters
+    return cipher_text
+
+# main function
+def atBash(message, mode):
+    if mode == "encode":
+        print(f"Encoded message: \033[1;34m{atBashCipher(message)}\033[1;0m")
+    elif mode == "decode":
+        print(f"Decoded message: \033[1;34m{atBashCipher(message)}\033[1;0m")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=banners(banner))
+    parser.add_argument("message", help="Message to \033[1;35mencrypt/decrypt\033[1;0m")
+    parser.add_argument("mode", help="Mode of the code; \033[1;35mencode/decode\033[1;0m")
+    args = parser.parse_args()
+    
+    atBash(args.message, args.mode)
