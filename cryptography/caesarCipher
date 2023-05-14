@@ -22,7 +22,7 @@ def casarCipher(message, key, SYMBOLS):
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='Caesar Cipher Encypter')
-	parser.add_argument("-m", "--message", default=None, help="message you want to encrypt")
+	parser.add_argument("message", default=None, help="message you want to encrypt")
 	parser.add_argument("-k", "--key", type=int, default=None, help="key for encypter")
 	parser.add_argument("-s", "--symbol", default=None, help="symbols for encypter")
 	args = parser.parse_args()
