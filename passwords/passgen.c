@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include <getopt.h>
+#include <unistd.h>
 
 // Default values for password generation
 #define DEFAULT_LENGTH 12
@@ -61,6 +62,7 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < count; i++) {
         char* password = generate_password(length, chars);
         printf("%s\n", password);
+        usleep(50000);
         free(password);
     }
 
