@@ -4,7 +4,8 @@
 import string
 import argparse
 from random import randint
- 
+
+# cipher function
 def casarCipher(message, key, SYMBOLS):
 	translated = ''
 	for symbol in message:
@@ -20,14 +21,37 @@ def casarCipher(message, key, SYMBOLS):
 			translated = translated + symbol
 	print(f"{translated}\nkey: {key}")
 
+# cracker function
+def cracker_full(message, SYMBOLS):
+	for key in range(len(SYMBOLS)):
+		translated = ''
+		for symbol in message:
+			if symbol in SYMBOLS:
+				symbolIndex = SYMBOLS.find(symbol)
+				translatedIndex = symbolIndex - key
+				if translatedIndex < 0:
+					translatedIndex = translatedIndex + len(SYMBOLS)
+				translated = translated + SYMBOLS[translatedIndex]
+			else:
+				translated = translated + symbol
+		print('Key=%s: %s' % (key, translated))
+
+# main function
+def main(message, key, SYMBOLS, mode):
+	if mode == 'encode':
+		casarCipher(message, key, SYMBOLS)
+	elif mode == 'decode':
+		cracker_full(message, SYMBOLS)
+
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='Caesar Cipher Encypter')
 	parser.add_argument("message", default=None, help="message you want to encrypt")
 	parser.add_argument("-k", "--key", type=int, default=None, help="key for encypter")
 	parser.add_argument("-s", "--symbol", default=None, help="symbols for encypter")
+	parser.add_argument("mode", help="mode for encypter; encode/decode")
 	args = parser.parse_args()
 	if args.symbol is None:
 		args.symbol = string.printable.replace(' \t\n\r\x0b\x0c', '')
 	if args.key is None:
 		args.key = randint(0, len(args.symbol))
-	casarCipher(args.message, args.key, args.symbol)
+	main(args.message, args.key, args.symbol, args.mode)
