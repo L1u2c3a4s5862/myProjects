@@ -77,8 +77,8 @@ def playfairCipher(message, key):
 # creating argument
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description=banners(banner))
-    parser.add_argument("-m", "--message", help="message to be encrypted")
-    parser.add_argument("-k", "--key", help="key of the encrypted message")
+    parser.add_argument("message", help="message to be encrypted")
+    parser.add_argument("key", help="key of the encrypted message")
     args = parser.parse_args()
 
     playfairCipher(args.message, args.key)
