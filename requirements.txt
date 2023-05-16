@@ -2,7 +2,7 @@ argparse==1.4.0
 requests==2.22.0
 prettytable==0.7.2
 bs4==0.0.1
-airportsdata==1.0.0
+airportsdata==20220805
 requests==2.22.0
 jsonschema==3.0.2
 PYPDF2==1.26.0
