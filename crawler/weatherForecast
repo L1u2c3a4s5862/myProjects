@@ -5,7 +5,7 @@ import requests
 import json
 
 # define my openweather api key
-my_api_keys = "d6cc937c6a6994d960d0c1bbbf197446"
+my_api_keys = "7da817edc6f74362d56d07ed0157e195"
 
 # weather emojis
 weather_emojis = {
@@ -39,7 +39,8 @@ wind_deg = weather['wind']['deg']
 wind_direction = "N" if (wind_deg >= 0 and wind_deg <= 45) or (wind_deg > 315 and wind_deg <= 360) else "E" if wind_deg > 45 and wind_deg <= 135 else "S" if wind_deg > 135 and wind_deg <= 225 else "W"
 
 # print the weather
-print(f"tempreture: \033[1;34m{temp_min}-{temp_max}˚C\033[1;0m")
+print(f"city: \033[1;34m{city}\033[1;0m")
+print(f"tempreture: \033[1;34m{temp_min}˚C-{temp_max}˚C\033[1;0m")
 print(f"weather: \033[1;34m{description}\033[1;0m {emojis}")
 print(f"humidity: \033[1;34m{humidity}%\033[1;0m")
 print(f"wind speed: \033[1;34m{wind_speed}m/s {wind_direction}\033[1;0m")
