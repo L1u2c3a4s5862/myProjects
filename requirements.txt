@@ -1,0 +1,12 @@
+itertools==8.0.0
+argparse==1.4.0
+colorama==0.4.4
+hashlib==20081119
+passlib==1.7.4
+PyPDF2==1.26.0
+texttable==1.6.3
+prettytable==2.2.0
+urllib3==1.26.6
+requests==2.26.0
+bs4==0.0.1
+airportsdata==1.0.0
