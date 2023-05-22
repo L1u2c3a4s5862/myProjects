@@ -106,9 +106,10 @@ def generate_license(nation, num):
             forth = "".join([str(random.choice(numbers)) for i in range(2)])
             fivth = "".join([str(random.choice(numbers)) for i in range(2)])
             # change the first zero to a centered dot
-            if forth[0] == '0' or fivth[0] == '0':
-                forth = forth.replace('0', '·', 1)
-                fivth = fivth.replace('0', '·', 1)
+            if forth[0] == '0':
+                forth = '·'+forth[1:]
+            if fivth[0] == '0':
+                fivth = '·'+fivth[1:]
             print(f"\033[1;34m{first}{mid_num}{second}{third}{forth}-{fivth}\033[1;0m")
             time.sleep(0.05)
     # generate the Korea license plates
