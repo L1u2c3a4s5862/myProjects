@@ -104,10 +104,10 @@ def generate_license(nation, num):
             third = str(random.choice(letters_jp))
             # numbers from 0* to 9 (* for leading zeros)
             forth = "".join([str(random.choice(numbers)) for i in range(2)])
-            fivth = "".join([str(random.choice(numbers)) for i in range(2)])
             # change the first zero to a centered dot
             if forth[0] == '0':
                 forth = '·'+forth[1:]
+            fivth = "".join([str(random.choice(numbers)) for i in range(2)])
             if fivth[0] == '0':
                 fivth = '·'+fivth[1:]
             print(f"\033[1;34m{first}{mid_num}{second}{third}{forth}-{fivth}\033[1;0m")
