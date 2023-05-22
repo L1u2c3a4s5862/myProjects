@@ -118,8 +118,8 @@ def generate_license(nation, num):
 # parse arguments
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=banners(banner))
-    parser.add_argument("nation", type=str, help="nation of license plates to generate. \033[1;34m(ch/China, uk/United Kingdom, us/United States, jp/Japan, kor/Korea)\033[1;0m")
-    parser.add_argument("number", type=int, default=1, help="number of license plates to generate")
+    parser.add_argument("nation", type=str, help="country of license plates to generate \033[1;34m(ch: China, uk: United Kingdom, us: United States, jp: Japan, kor: Korea)\033[1;0m")
+    parser.add_argument("number", type=int, help="number of license plates to generate")
     args = parser.parse_args()
 
     generate_license(args.nation, args.number)
