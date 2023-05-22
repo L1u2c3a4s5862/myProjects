@@ -31,19 +31,30 @@ cities = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M',
 chars = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S',
          'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 #! UK
-# Define lists of valid characters for each section of the license plate
+# Define lists of valid letters for each section of the license plate
 letters_uk = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K','L',
          'M', 'N', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y']
 numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
 #! US
-# Define lists of valid characters for each section of the license plate
+# Define lists of valid letters for each section of the license plate
 letters_us = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
          'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 #! Japan
+# Define lists of valid letters for each section of the license plate
+letters_jp = ['さ', 'す', 'せ', 'そ', 'た', 'ち', 'つ', 'て', 'と', 'な', 'に', 'ぬ', 'ね',
+              'の', 'は', 'ひ', 'ふ', 'ほ', 'ま', 'み', 'む', 'め', 'も', 'や', 'ゆ', 'よ',
+              'ら', 'り', 'る', 'ろ', 'あ', 'い', 'う', 'え', 'か', 'き', 'く', 'け', 'こ', 'を']
+# Define lists of valid chararcters for each section of the license plate
+chars_jp = ['尾張小牧', '一宮', '春日井', '名古屋', '豊橋', '三河', '岡崎', '豊田', '秋田', '青森', '八戸', '千葉', '成田', '習志野', '野田', '柏',
+            '袖ヶ浦', '愛媛', '福井', '福岡', '筑豊', '北九州', '久留米', '福島', '会津', '郡山', 'いわき', '岐阜', '飛騨', '群馬', '前橋', '高崎',
+            '福山', '広島', '旭川', '函館', '北見', '釧路', '室蘭', '帯広', '札幌', '姫路', '神戸', '水戸', '土浦', 'つくば', '石川', '金沢', '岩手',
+            '平泉', '盛岡', '香川', '鹿児島', '奄美', '相模', '湘南', '川崎', '横浜', '高知', '熊本', '京都', '三重', '鈴鹿', '宮城', '仙台', '宮崎',
+            '松本', '諏訪', '長野', '佐世保', '奈良', '長岡', '新潟', '大分', '岡山', '倉敷', '沖縄', '和泉', '堺', '大阪', 'なにわ', '佐賀', '春日部',
+            '越谷', '熊谷', '大宮', '川口', '所沢', '川越', '滋賀', '島根', '浜松', '沼津', '富士山', '伊豆', '静岡', '栃木', '宇都宮', '那須', '徳島',
+            '足立', '八王子', '多摩', '練馬', '杉並', '品川', '世田谷', '鳥取', '富山', '和歌山', '庄内', '山形', '山口', '下関', '山梨']
+#! Korea
 # Define lists of valid characters for each section of the license plate
-letters_jp = ['あ', 'い', 'う', 'え', 'お', 'か', 'き', 'く', 'け', 'こ', 'さ', 'し', 'す', 'せ', 'そ',
-             'た', 'ち', 'つ', 'て', 'と', 'な', 'に', 'ぬ', 'ね', 'の', 'は', 'ひ', 'ふ', 'へ', 'ほ', 
-             'ま', 'み', 'む', 'め', 'も', 'や', 'ゆ', 'よ', 'ら', 'り', 'る', 'れ', 'ろ', 'わ', 'を', 'ん']
+letters_kor = ['평양', '라선', '평남', '평북', '자강', '황남', '황북', '강원', '함남', '함북', '량강', '남포', '개성']
 # generate the Chinese license plates
 def generate_license(nation, num):
     # generate the Chinese license plates
@@ -54,7 +65,7 @@ def generate_license(nation, num):
             province = random.choice(provinces)
             city = random.choice(cities)
             letters = "".join([str(random.choice(chars)) for i in range(5)])
-            print(f"{province}{city}·{letters}")
+            print(f"\033[1;34m{province}{city}·{letters}\033[1;0m")
             time.sleep(0.05)
     # generate the UK license plates
     elif nation == "uk":
@@ -64,7 +75,7 @@ def generate_license(nation, num):
             first = "".join([str(random.choice(letters_uk)) for i in range(2)])
             second = "".join([str(random.choice(numbers)) for i in range(2)])
             third = "".join([str(random.choice(letters_uk)) for i in range(3)])
-            print(f"{first}{second}{third}")
+            print(f"\033[1;34m{first}{second}{third}\033[1;0m")
             time.sleep(0.05)
     # generate the US license plates
     elif nation == "us":
@@ -73,22 +84,41 @@ def generate_license(nation, num):
         for i in range(num):
             first = "".join([str(random.choice(letters_us)) for i in range(3)])
             second = "".join([str(random.choice(numbers)) for i in range(4)])
-            print(f"{first}{second}")
+            print(f"\033[1;34m{first}{second}\033[1;0m")
             time.sleep(0.05)
     # generate the Japan license plates
     elif nation == "jp":
         print(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
         time.sleep(1)
         for i in range(num):
-            first = "".join([str(random.choice(letters_jp)) for i in range(3)])
-            second = "".join([str(random.choice(numbers)) for i in range(4)])
-            print(f"{first}{second}")
+            first = "".join([str(random.choice(chars_jp))])
+            mid_num = str(random.choice([3, 5])) # 3 for vichles > 2000cc, 5 for viichles < 2000cc
+            second = "".join([str(random.choice(numbers)) for i in range(2)])
+            third = str(random.choice(letters_jp))
+            # numbers from 0* to 9 (* for leading zeros)
+            forth = "".join([str(random.choice(numbers)) for i in range(2)])
+            fivth = "".join([str(random.choice(numbers)) for i in range(2)])
+            # change the first zero to a centered dot
+            if forth[0] == '0' or fivth[0] == '0':
+                forth = forth.replace('0', '·', 1)
+                fivth = fivth.replace('0', '·', 1)
+            print(f"\033[1;34m{first}{mid_num}{second}{third}{forth}-{fivth}\033[1;0m")
+            time.sleep(0.05)
+    # generate the Korea license plates
+    elif nation == "kor":
+        print(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
+        time.sleep(1)
+        for i in range(num):
+            first = str(random.choice(letters_kor))
+            second = "".join([str(random.choice(numbers)) for i in range(2)])
+            third = "".join([str(random.choice(numbers)) for i in range(3)])
+            print(f"\033[1;34m{first}{second}-{third}\033[1;0m")
             time.sleep(0.05)
 
 # parse arguments
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=banners(banner))
-    parser.add_argument("nation", type=str, help="nation of license plates to generate. \033[1;34m(ch/china, uk, us, jp)\033[1;0m")
+    parser.add_argument("nation", type=str, help="nation of license plates to generate. \033[1;34m(ch/china, uk, us, jp, kor)\033[1;0m")
     parser.add_argument("number", type=int, default=1, help="number of license plates to generate")
     args = parser.parse_args()
 
