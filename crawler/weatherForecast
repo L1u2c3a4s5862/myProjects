@@ -6,10 +6,10 @@ import json
 import time
 
 # function for printout text with delay
-def printStep(text, delay=0.03):
-    for character in text:
-        print(character, end='', flush=True)
-        time.sleep(delay)
+# def printStep(text, delay=0.03):
+#     for character in text:
+#         print(character, end='', flush=True)
+#         time.sleep(delay)
 
 # define my openweather api key
 my_api_keys = "7da817edc6f74362d56d07ed0157e195"
@@ -46,8 +46,13 @@ wind_deg = weather['wind']['deg']
 wind_direction = "N" if (wind_deg >= 0 and wind_deg <= 45) or (wind_deg > 315 and wind_deg <= 360) else "E" if wind_deg > 45 and wind_deg <= 135 else "S" if wind_deg > 135 and wind_deg <= 225 else "W"
 
 # print the weather
-printStep(f"city: \033[1;34m{city}\033[1;0m\n")
-printStep(f"tempreture: \033[1;34m{temp_min}˚C-{temp_max}˚C\033[1;0m\n")
-printStep(f"weather: \033[1;34m{description}\033[1;0m {emojis}\n")
-printStep(f"humidity: \033[1;34m{humidity}%\033[1;0m\n")
-printStep(f"wind speed: \033[1;34m{wind_speed}m/s {wind_direction}\033[1;0m\n")
+print(f"city: \033[1;34m{city}\033[1;0m\n")
+print(f"tempreture: \033[1;34m{temp_min}˚C-{temp_max}˚C\033[1;0m\n")
+print(f"weather: \033[1;34m{description}\033[1;0m {emojis}\n")
+print(f"humidity: \033[1;34m{humidity}%\033[1;0m\n")
+print(f"wind speed: \033[1;34m{wind_speed}m/s {wind_direction}\033[1;0m\n")
+# printStep(f"city: \033[1;34m{city}\033[1;0m\n")
+# printStep(f"tempreture: \033[1;34m{temp_min}˚C-{temp_max}˚C\033[1;0m\n")
+# printStep(f"weather: \033[1;34m{description}\033[1;0m {emojis}\n")
+# printStep(f"humidity: \033[1;34m{humidity}%\033[1;0m\n")
+# printStep(f"wind speed: \033[1;34m{wind_speed}m/s {wind_direction}\033[1;0m\n")
