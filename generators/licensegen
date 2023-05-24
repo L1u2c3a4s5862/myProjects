@@ -4,6 +4,7 @@
 import time
 import random
 import argparse
+from colorama import Fore
 
 # generate banner
 banner = """
@@ -32,6 +33,9 @@ numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
 provinces = ['京', '津', '沪', '渝', '冀', '豫', '云', '辽', '黑', '湘', '皖', '鲁',
              '新', '苏', '浙', '赣', '鄂', '桂', '甘', '晋', '蒙', '陕', '吉', '闽',
              '贵', '粤', '青', '藏', '川', '宁', '琼', '使', '领', '警', '学', '港', '澳']
+# list of Chinese special license plate
+spec_chars_suf = ['警', '学', '挂', '超', '试', '领']
+spec_chars_pre = ['使', '民航']
 # list of city code that can be used in license plates
 cities = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M',
           'L', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y']
@@ -68,11 +72,21 @@ def generate_license(nation, num):
     if nation == "ch":
         printStep(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
         time.sleep(1)
+        print("\033[1;34m普通车牌   特殊车牌    市政车牌\033[1;0m")
         for i in range(num):
             province = random.choice(provinces)
             city = random.choice(cities)
             letters = "".join([str(random.choice(chars)) for i in range(5)])
-            print(f"\033[1;34m{province}{city}·{letters}\033[1;0m")
+            spec_letters = "".join([str(random.choice(chars)) for i in range(4)])
+            spec_letter_suf = str(random.choice(spec_chars_suf))
+            # if the special letter is "警" or "领", then the color of the letter will be red
+            if spec_letter_suf == "警" or spec_letter_suf == "领":
+                spec_letter_suf = Fore.RED + spec_letter_suf + Fore.RESET
+            spec_letter_pre = str(random.choice(spec_chars_pre))
+            # if the special letter is "使", then the color of the letter will be red
+            if spec_letter_pre == "使":
+                spec_letter_pre = Fore.RED + spec_letter_pre + Fore.RESET
+            print(f"{province}{city}·{letters}  {province}{city}·{spec_letters}{spec_letter_suf}  {spec_letter_pre}{city}·{letters}")
             time.sleep(0.05)
     # generate the UK license plates
     elif nation == "uk":
@@ -98,7 +112,7 @@ def generate_license(nation, num):
         printStep(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
         time.sleep(1)
         for i in range(num):
-            first = "".join([str(random.choice(chars_jp))])
+            first = str(random.choice(chars_jp))
             mid_num = str(random.choice([3, 5])) # 3 for vichles > 2000cc, 5 for viichles < 2000cc
             second = "".join([str(random.choice(numbers)) for i in range(2)])
             third = str(random.choice(letters_jp))
