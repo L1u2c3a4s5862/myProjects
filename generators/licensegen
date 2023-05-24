@@ -20,11 +20,11 @@ def banners(banner):
     print(banner)
 
 # print strings letter by letter
-def printStep(text, delay=0.05):
-    for c in text:
-        print(c, end='', flush=True)
-        time.sleep(delay)
-    print(' ')
+# def printStep(text, delay=0.05):
+#     for c in text:
+#         print(c, end='', flush=True)
+#         time.sleep(delay)
+#     print(' ')
 
 #! the main function
 numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
@@ -70,9 +70,11 @@ letters_kor = ['평양', '라선', '평남', '평북', '자강', '황남', '황�
 def generate_license(nation, num):
     # generate the Chinese license plates
     if nation == "ch":
-        printStep(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
+        # printStep(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
+        print(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
         time.sleep(1)
         print("\033[1;34m普通车牌   特殊车牌    市政车牌\033[1;0m")
+        time.sleep(0.5)
         for i in range(num):
             province = random.choice(provinces)
             city = random.choice(cities)
@@ -87,7 +89,8 @@ def generate_license(nation, num):
             time.sleep(0.05)
     # generate the UK license plates
     elif nation == "uk":
-        printStep(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
+        # printStep(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
+        print(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
         time.sleep(1)
         for i in range(num):
             first = "".join([str(random.choice(letters_uk)) for i in range(2)])
@@ -97,7 +100,8 @@ def generate_license(nation, num):
             time.sleep(0.05)
     # generate the US license plates
     elif nation == "us":
-        printStep(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
+        # printStep(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
+        print(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
         time.sleep(1)
         for i in range(num):
             first = "".join([str(random.choice(letters_us)) for i in range(3)])
@@ -106,7 +110,8 @@ def generate_license(nation, num):
             time.sleep(0.05)
     # generate the Japan license plates
     elif nation == "jp":
-        printStep(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
+        # printStep(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
+        print(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
         time.sleep(1)
         for i in range(num):
             first = str(random.choice(chars_jp))
@@ -125,7 +130,8 @@ def generate_license(nation, num):
             time.sleep(0.05)
     # generate the Korea license plates
     elif nation == "kor":
-        printStep(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
+        # printStep(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
+        print(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
         time.sleep(1)
         for i in range(num):
             first = str(random.choice(letters_kor))
