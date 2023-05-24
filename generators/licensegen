@@ -35,7 +35,7 @@ provinces = ['京', '津', '沪', '渝', '冀', '豫', '云', '辽', '黑', '湘
              '贵', '粤', '青', '藏', '川', '宁', '琼', '使', '领', '警', '学', '港', '澳']
 # list of Chinese special license plate
 spec_chars_suf = ['警', '学', '挂', '超', '试', '领']
-spec_chars_pre = ['使', '民航']
+spec_chars_pre = '民航'
 # list of city code that can be used in license plates
 cities = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M',
           'L', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y']
@@ -83,10 +83,7 @@ def generate_license(nation, num):
             if spec_letter_suf == "警" or spec_letter_suf == "领":
                 spec_letter_suf = Fore.RED + spec_letter_suf + Fore.RESET
             spec_letter_pre = str(random.choice(spec_chars_pre))
-            # if the special letter is "使", then the color of the letter will be red
-            if spec_letter_pre == "使":
-                spec_letter_pre = Fore.RED + spec_letter_pre + Fore.RESET
-            print(f"{province}{city}·{letters}  {province}{city}·{spec_letters}{spec_letter_suf}  {spec_letter_pre}{city}·{letters}")
+            print(f"{province}{city}·{letters}  {province}{city}·{spec_letters}{spec_letter_suf}  {spec_chars_pre}{city}·{letters}")
             time.sleep(0.05)
     # generate the UK license plates
     elif nation == "uk":
