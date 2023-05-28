@@ -17,7 +17,6 @@ banner = """
 \033[1;33mThis maze generator can generate a rectangular maze\033[1;0m
 \033[1;32mDescreption:\033[1;0m
 🟥: Start point      🟩: Finish point
-⬛: Wall             ⬜: Path
 """
 def banners(banner):
     print(banner)
@@ -41,6 +40,7 @@ class Cell:
                 continue
             children.append(child)
         return children
+
 # Removeing the wall between two Cells
 def removeWalls(current: Cell, choice: Cell):
     if choice.x > current.x:
@@ -55,6 +55,7 @@ def removeWalls(current: Cell, choice: Cell):
     elif choice.y < current.y:
         current.walls[2] = False
         choice.walls[3] = False
+
 # Draw existing walls around Cells
 def drawWalls(grid: list, binGrid: list) -> list:
     for yindex, y in enumerate(grid):
@@ -69,12 +70,14 @@ def drawWalls(grid: list, binGrid: list) -> list:
                 if i == 3 and w:
                     binGrid[yindex*2+2][xindex*2+1] = '⬛'
     return binGrid
+
 # Draw a border around the maze
 def drawBorder(grid: list) -> list:
     for row in grid:
         row[0] = row[-1] = '⬛'
     grid[0] = grid[-1] = ['⬛']*len(grid[0])
     return grid
+
 # Draw the maze using ASCII characters and display the maze
 def displayMaze(grid: list, start_point: tuple, end_point: tuple):
     binGrid = []
@@ -92,34 +95,40 @@ def displayMaze(grid: list, start_point: tuple, end_point: tuple):
     binGrid[end_point[0]*2+1][end_point[1]*2+1] = '🟩'  # Finish point
     print('\n'.join([''.join(x) for x in binGrid]))
 
-# Request the user to input maze dimensions and initialise the maze, stack and initial Cell
-parser = argparse.ArgumentParser(description=banners(banner))
-parser.add_argument('width', type=int, help='Width of the maze to be generated')
-parser.add_argument('height', type=int, help='Height of the maze to be generated')
-args = parser.parse_args()
-width = args.width
-height = args.height
-grid = [[Cell(x, y) for x in range(width)] for y in range(height)]
-# random start point and end point
-start_point = (0, random.randint(0, width-1)) if random.randint(0, 1) else (random.randint(0, height-1), 0)
-end_point = (height-1, random.randint(0, width-1)) if random.randint(0, 1) else (random.randint(0, height-1), width-1)
-current = grid[0][0]
-stack = []
-# Main loop to generate the maze
-while True:
-    current.visited = True
-    children = current.getChildren(grid)
-    if children:
-        choice = random.choice(children)
-        choice.visited = True
-        stack.append(current)
-        removeWalls(current, choice)
-        current = choice
-    elif stack:
-        current = stack.pop()
-    else:
-        break
-# Display the maze
-print("\033[1;34mgenerating maze...\033[1;0m")
-time.sleep(0.5)
-displayMaze(grid, start_point, end_point)
+#! main function
+def mazegen(height, width):
+    grid = [[Cell(x, y) for x in range(width)] for y in range(height)]
+    # random start point and end point
+    start_point = (0, random.randint(0, width-1)) if random.randint(0, 1) \
+        else (random.randint(0, height-1), 0)
+    end_point = (height-1, random.randint(0, width-1)) if random.randint(0, 1) \
+        else (random.randint(0, height-1), width-1)
+    current = grid[start_point[1]][start_point[0]]
+    stack = []
+    # Main loop to generate the maze
+    while True:
+        current.visited = True
+        children = current.getChildren(grid)
+        if children:
+            choice = random.choice(children)
+            choice.visited = True
+            stack.append(current)
+            removeWalls(current, choice)
+            current = choice
+        elif stack:
+            current = stack.pop()
+        else:
+            break
+    # Display the maze
+    print("\033[1;34mgenerating maze...\033[1;0m")
+    time.sleep(0.5)
+    displayMaze(grid, start_point, end_point)
+
+if __name__ == "__main__":
+    # Request the user to input maze dimensions and initialise the maze, stack and initial Cell
+    parser = argparse.ArgumentParser(description=banners(banner))
+    parser.add_argument('height', type=int, help='Height of the maze to be generated')
+    parser.add_argument('width', type=int, help='Width of the maze to be generated')
+    args = parser.parse_args()
+    # call the function
+    mazegen(args.height, args.width)
