@@ -1,57 +1,96 @@
 #!/usr/local/bin/python3
 # -*- coding: utf-8 -*-
 
+import os
 import string
 import argparse
 from random import randint
 
-# cipher function
-def casarCipher(message, key, SYMBOLS):
-	translated = ''
-	for symbol in message:
-		if symbol in SYMBOLS:
-			symbolIndex = SYMBOLS.find(symbol)
-			translatedIndex = symbolIndex + key
-			if translatedIndex >= len(SYMBOLS):
-				translatedIndex = translatedIndex - len(SYMBOLS)
-			elif translatedIndex < 0:
-				translatedIndex = translatedIndex + len(SYMBOLS)
-			translated = translated + SYMBOLS[translatedIndex]
-		else:
-			translated = translated + symbol
-	print(f"{translated}\nkey: {key}")
+# read file
+def readFile(filename):
+	file = open(filename, 'r')
+	message = file.read()
+	file.close()
+	return message
 
-# cracker function
-def cracker_full(message, SYMBOLS):
-	for key in range(len(SYMBOLS)):
+# cipher function
+def casarCipher(message, key, SYMBOLS, output):
+	# check if the `message` is a file
+	if os.path.isfile(message):
+		message = readFile(message)
 		translated = ''
 		for symbol in message:
 			if symbol in SYMBOLS:
 				symbolIndex = SYMBOLS.find(symbol)
-				translatedIndex = symbolIndex - key
-				if translatedIndex < 0:
+				translatedIndex = symbolIndex + key
+				if translatedIndex >= len(SYMBOLS):
+					translatedIndex = translatedIndex - len(SYMBOLS)
+				elif translatedIndex < 0:
 					translatedIndex = translatedIndex + len(SYMBOLS)
 				translated = translated + SYMBOLS[translatedIndex]
 			else:
 				translated = translated + symbol
-		print('Key=%s: %s' % (key, translated))
+		# check if the `output` is empty
+		if output is None:
+			print(f"{translated}\nkey: {key}")
+		# write to file
+		else:
+			# write the message into the file
+			file = open(output, 'w')
+			file.write(f"{translated}")
+			file.close()
+			print(f"the file \033[1;34m{output}\033[1;0m has been created")
+			print(f"\033[1;35mkey\033[1;0m: {key}")
+
+# cracker function
+
+
+def cracker_full(message, SYMBOLS, output):
+    # check if the `message` is a file
+    if os.path.isfile(message):
+        message = readFile(message)
+    file = None
+    if output is not None:
+        # open the file only once
+        file = open(output, 'a')
+    for key in range(len(SYMBOLS)):
+        translated = ''
+        for symbol in message:
+            if symbol in SYMBOLS:
+                symbolIndex = SYMBOLS.find(symbol)
+                translatedIndex = symbolIndex - key
+                if translatedIndex < 0:
+                    translatedIndex = translatedIndex + len(SYMBOLS)
+                translated = translated + SYMBOLS[translatedIndex]
+            else:
+                translated = translated + symbol
+        if output is None:
+            print(f'\033[1;35mKey={key}\033[1;0m:\n{translated}\n')
+        else:
+            # write the message into the file
+            file.write(f'Key={key}:\n{translated}\n')
+    if output is not None:
+        # close the file once done
+        file.close()
+
 
 # main function
-def main(message, key, SYMBOLS, mode):
+def main(message, key, SYMBOLS, mode, output):
 	if mode == 'encode':
-		casarCipher(message, key, SYMBOLS)
+		casarCipher(message, key, SYMBOLS, output)
 	elif mode == 'decode':
-		cracker_full(message, SYMBOLS)
+		cracker_full(message, SYMBOLS, output)
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='Caesar Cipher Encypter')
-	parser.add_argument("message", default=None, help="message you want to encrypt")
+	parser.add_argument("message", type=str, help="message you want to encrypt/file you want to encrypt")
 	parser.add_argument("-k", "--key", type=int, default=None, help="key for encypter")
 	parser.add_argument("-s", "--symbol", default=None, help="symbols for encypter")
 	parser.add_argument("mode", help="mode for encypter; encode/decode")
+	parser.add_argument("-out", "--output", type=str, help="output file for encypter")
 	args = parser.parse_args()
 	if args.symbol is None:
 		args.symbol = string.printable.replace(' \t\n\r\x0b\x0c', '')
 	if args.key is None:
 		args.key = randint(0, len(args.symbol))
-	main(args.message, args.key, args.symbol, args.mode)
+	main(args.message, args.key, args.symbol, args.mode, args.output)
