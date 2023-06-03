@@ -7,6 +7,7 @@ from random import randint
 from datetime import datetime
 from prettytable import PrettyTable
 PTables = PrettyTable()
+
 month = datetime.now().month
 year = datetime.now().year
 alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
