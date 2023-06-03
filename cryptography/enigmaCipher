@@ -20,7 +20,6 @@ banner = """
 """
 def banners(banner):
 	print(banner)
-
 # rotor setting function
 def rotorSetting(numberOfRotors):
 	rotors = ["I", "II", "III", "IV", "V"]
