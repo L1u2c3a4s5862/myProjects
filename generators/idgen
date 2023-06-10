@@ -2,13 +2,22 @@
 # -*- coding: utf-8 -*-
 
 import pandas as pd
+import subprocess
 import itertools
 import argparse
 import string
+import time
 import os
 
 # 创建所需的省份，城市，地区代码
 username = os.path.expanduser("~")
+# 如果没有下载中国行政区划代码文件
+if os.path.exists(f"{username}/Administrative-divisions-of-China/") == False:
+	print("\033[1;32m[+]\033[1;0m 正在下载中国行政区划代码...")
+	time.sleep(0.5)
+	command = ["git", "clone", "https://github.com/modood/Administrative-divisions-of-China.git"]
+	subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).wait()
+	print("\033[1;32m[+]\033[1;0m 下载完成")
 province_csv = pd.read_csv(f"{username}/Administrative-divisions-of-China/dist/provinces.csv", index_col="name")
 city_csv = pd.read_csv(f"{username}/Administrative-divisions-of-China/dist/cities.csv", index_col="provinceCode")
 area_csv = pd.read_csv(f"{username}/Administrative-divisions-of-China/dist/areas.csv", index_col="name")
@@ -16,11 +25,12 @@ area_csv = pd.read_csv(f"{username}/Administrative-divisions-of-China/dist/areas
 # 创建函数`idfinder`
 def idfinder(province, city, area, birth, gender, output):
 	"""
-	param`省份`: 目标所在的省份
-	param`城市`: 目标所在的城市
-	param`地区`: 目标所在的地区, 可能他申请身份证的地区不在她/他现在住的地方
-	param`出生日期`: 目标的出生日期
-	param`性别`: 目标的性别
+	param`省份`：目标所在的省份
+	param`城市`：目标所在的城市
+	param`地区`：目标所在的地区
+				可能他申请身份证的地区不在她/他现在住的地方
+	param`出生日期`：目标的出生日期
+	param`性别`：目标的性别
 	"""
 	# 设置省份，城市，地区代码，最后用地区代码来表示
 	# 判断如果省份是带有`市`的
@@ -33,7 +43,6 @@ def idfinder(province, city, area, birth, gender, output):
 	BirthCode = ''.join(birth.split("/"))
 	# 把所有已知的信息代码合并起来
 	digit14 = str(AreaCode)+BirthCode
-
 	# 猜15-17位是什么数字
 	num = "0123456789"
 	# 创建一个存储信息的文件
@@ -43,12 +52,12 @@ def idfinder(province, city, area, birth, gender, output):
 		# 把所有3位数组合全部打出来
 		for xs in itertools.product(num, repeat=3):
 			three_digit = ''.join(xs)
-			if int(three_digit)%2==1:
+			if int(three_digit) % 2 == 1:
 				digit3 = three_digit
 				digit17 = digit14+str(digit3)
 				# 计算最后一位数
-				last_digit = ['1','0','X','9','8','7','6','5','4','3','2']\
-					[sum([int(digit17[i])*[7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2][i] for i in range(17)])%11]
+				last_digit = ['1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'][sum(
+					[int(digit17[i])*[7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2][i] for i in range(17)]) % 11]
 				# 融合所有的身份证号码
 				final_id = digit17+last_digit
 				# 输出每一个身份证号
@@ -58,12 +67,12 @@ def idfinder(province, city, area, birth, gender, output):
 		# 把所有3位数组合全部打出来
 		for xs in itertools.product(num, repeat=3):
 			three_digit = ''.join(xs)
-			if int(three_digit)%2==0:
+			if int(three_digit) % 2 == 0:
 				digit3 = three_digit
 				digit17 = digit14+str(digit3)
 				# 计算最后一位数
-				last_digit = ['1','0','X','9','8','7','6','5','4','3','2']\
-					[sum([int(digit17[i])*[7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2][i] for i in range(17)])%11]
+				last_digit = ['1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'][sum(
+					[int(digit17[i])*[7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2][i] for i in range(17)]) % 11]
 				# 融合所有的身份证号码
 				final_id = digit17+last_digit
 				# 输出每一个身份证号
@@ -75,8 +84,8 @@ def idfinder(province, city, area, birth, gender, output):
 			digit3 = ''.join(xs)
 			digit17 = digit14+str(digit3)
 			# 计算最后一位数
-			last_digit = ['1','0','X','9','8','7','6','5','4','3','2']\
-				[sum([int(digit17[i])*[7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2][i] for i in range(17)])%11]
+			last_digit = ['1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'][sum(
+				[int(digit17[i])*[7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2][i] for i in range(17)]) % 11]
 			# 融合所有的身份证号码
 			final_id = digit17+last_digit
 			# 输出每一个身份证号
@@ -86,13 +95,13 @@ def idfinder(province, city, area, birth, gender, output):
 
 if __name__ == "__main__":
 	# 创建代码parameter
-	parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='身份证生成器')
-	parser.add_argument("province", default=None, help="人物所在省份，注：要加\033[1;31m省\033[1;0m字")
-	parser.add_argument("city", default=None, help="人物所在城市，注：要加\033[1;31m市\033[1;0m字")
-	parser.add_argument("area", default=None, help="人物所在地区，注：要加\033[1;31m区\033[1;0m字")
-	parser.add_argument("birth", default=None, help="人物出生日期, 例: \033[1;31myyyy/mm/dd\033[1;0m")
-	parser.add_argument("gender", default=None, help="人物性别")
-	parser.add_argument("-out", "--output", default=f"{username}/Desktop/id.txt", help="创建文件地址")
+	parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='\033[1;35m身份证生成器\033[1;0m')
+	parser.add_argument("province", type=str, help="人物所在省份，要加\033[1;35m`省`\033[1;0m字")
+	parser.add_argument("city", type=str, help="人物所在城市，要加\033[1;35m`市`\033[1;0m字")
+	parser.add_argument("area", type=str, help="人物所在地区，要加\033[1;35m`区`\033[1;0m字")
+	parser.add_argument("birth", type=str, help="人物出生日期, 例: \033[1;35m`yyyy/mm/dd`\033[1;0m")
+	parser.add_argument("-g", "--gender", type=str, default=None, help="人物性别，如果人物性别为无，则性别为\033[1;35m`男和女`\033[1;0m")
+	parser.add_argument("-out", "--output", default=f"{username}/Desktop/身份证.txt", help="创建文件地址")
 	args = parser.parse_args()
 
 	# 调用函数`idfinder`
