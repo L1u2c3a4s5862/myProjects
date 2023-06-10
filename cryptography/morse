@@ -3,6 +3,7 @@
 
 import argparse
 
+# banenr function
 banner = """
 ███╗   ███╗ ██████╗ ██████╗ ███████╗███████╗
 ████╗ ████║██╔═══██╗██╔══██╗██╔════╝██╔════╝
@@ -10,8 +11,13 @@ banner = """
 ██║╚██╔╝██║██║   ██║██╔══██╗╚════██║██╔══╝  
 ██║ ╚═╝ ██║╚██████╔╝██║  ██║███████║███████╗
 ╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝
-\033[1;35m          -=Author: Lucas Liu=-          \033[1;0m
+\033[1;35m           <Author: Lucas Liu>           \033[1;0m
 """
+special_chars = "╝═╚║╗╔"
+# change the color of special characters
+for char in special_chars:
+    banner = banner.replace(char, f'\033[1;37m{char}\033[1;0m')
+# banners
 def banners(banner):
     print(banner)
 
