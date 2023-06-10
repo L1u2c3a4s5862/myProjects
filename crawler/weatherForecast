@@ -5,28 +5,21 @@ import requests
 import json
 import time
 
-# function for printout text with delay
-# def printStep(text, delay=0.03):
-#     for character in text:
-#         print(character, end='', flush=True)
-#         time.sleep(delay)
-
 # define my openweather api key
 my_api_keys = "7da817edc6f74362d56d07ed0157e195"
-
 # weather emojis
 weather_emojis = {
     'Clear': '☀️', 'Clouds': '☁️', 'Rain': '🌧', 'Snow': '❄️', 'Thunderstorm': '⛈', 'Drizzle': '🌦', 'Haze': '🌫', 
     'Mist': '🌫', 'Fog': '🌫', 'Sand': '🏜', 'Dust': '🌪', 'Ash': '🌚', 'Squall': '🌬', 'Tornado': '🌪'
 }
-
 # grab my location
 resp_ip = requests.get('http://ip-api.com/json/')
 data = resp_ip.json()
+zip_code = data['zip']
+query = data['query']
 city = data['city']
 lat = data['lat']
 lon = data['lon']
-
 # grab the weather for my location
 resp_weather = requests.get(f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={my_api_keys}")
 weather = json.loads(resp_weather.text)
@@ -44,15 +37,12 @@ wind_speed = weather['wind']['speed']
 # grab the wind direction
 wind_deg = weather['wind']['deg']
 wind_direction = "N" if (wind_deg >= 0 and wind_deg <= 45) or (wind_deg > 315 and wind_deg <= 360) else "E" if wind_deg > 45 and wind_deg <= 135 else "S" if wind_deg > 135 and wind_deg <= 225 else "W"
-
 # print the weather
 print(f"city: \033[1;34m{city}\033[1;0m")
+print(f"ip: \033[1;34m{query}\033[1;0m")
+print(f"lat: \033[1;34m{lat}\033[1;0m, lon: \033[1;34m{lon}\033[1;0m")
+print(f"zip code: \033[1;34m{zip_code}\033[1;0m")
 print(f"tempreture: \033[1;34m{temp_min}˚C-{temp_max}˚C\033[1;0m")
 print(f"weather: \033[1;34m{description}\033[1;0m {emojis}")
 print(f"humidity: \033[1;34m{humidity}%\033[1;0m")
 print(f"wind speed: \033[1;34m{wind_speed}m/s {wind_direction}\033[1;0m")
-# printStep(f"city: \033[1;34m{city}\033[1;0m\n")
-# printStep(f"tempreture: \033[1;34m{temp_min}˚C-{temp_max}˚C\033[1;0m\n")
-# printStep(f"weather: \033[1;34m{description}\033[1;0m {emojis}\n")
-# printStep(f"humidity: \033[1;34m{humidity}%\033[1;0m\n")
-# printStep(f"wind speed: \033[1;34m{wind_speed}m/s {wind_direction}\033[1;0m\n")
