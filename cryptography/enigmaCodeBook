@@ -11,24 +11,24 @@ year = datetime.now().year
 alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 TITLE = "\033[1;32mEnigma M3 UKW-B and UKW-C Reflector Code Book\033[1;0m"
 if month in [1, 3, 5, 7, 8, 10, 12]:
-  NUMBER_OF_DAYS = 31
+    NUMBER_OF_DAYS = 31
 elif month == 2:
-  if year%4==0:
-    NUMBER_OF_DAYS = 29
-  else:
-    NUMBER_OF_DAYS = 28
+    if year%4==0:
+        NUMBER_OF_DAYS = 29
+    else:
+        NUMBER_OF_DAYS = 28
 else:
-  NUMBER_OF_DAYS = 30
+    NUMBER_OF_DAYS = 30
 # set random rotor selection
 def rotor_selection(numberOfRotors):
     rotors = ["I","II","III","IV","V"]
     i = randint(0, numberOfRotors-1)
     ii = randint(0, numberOfRotors-1)
     while ii==i:
-      ii = randint(0, numberOfRotors-1)
+        ii = randint(0, numberOfRotors-1)
     iii = randint(0, numberOfRotors-1)
     while iii==i or iii==ii:
-      iii = randint(0, numberOfRotors-1)
+        iii = randint(0, numberOfRotors-1)
     rotor_i = rotors[i]
     rotor_ii = rotors[ii]
     rotor_iii = rotors[iii]
@@ -39,8 +39,8 @@ def rotor_selection(numberOfRotors):
 def ring_settings(numberOfRotors):
     settings = ""
     for i in range(numberOfRotors):
-      rotor = randint(0, 25)
-      settings = settings + alphabet[rotor]
+        rotor = randint(0, 25)
+        settings = settings + alphabet[rotor]
     return settings  
 # set random plugboard setting
 def plugboard_settings(numberOfPermutations):
@@ -48,27 +48,27 @@ def plugboard_settings(numberOfPermutations):
     stecksA = []
     stecksB= []
     for i in range(numberOfPermutations):
-      a = randint(0, 25)
-      while a in stecksA:
         a = randint(0, 25)
-      stecksA.append(a)
+        while a in stecksA:
+            a = randint(0, 25)
+        stecksA.append(a)
     for i in range(numberOfPermutations):
-      b = randint(0, 25)
-      while b in stecksA or b in stecksB:
         b = randint(0, 25)
-      stecksB.append(b)
+        while b in stecksA or b in stecksB:
+            b = randint(0, 25)
+        stecksB.append(b)
     stecksA.sort()
     settings=""
     for i in range(numberOfPermutations):
-       settings = settings + alphabet[stecksA[i]] + alphabet[stecksB[i]] + " "
+        settings = settings + alphabet[stecksA[i]] + alphabet[stecksB[i]] + " "
     settings = settings[:-1]
     return settings
 # set random ring position
 def rotor_positions(numberOfRotors):
     settings = ""
     for i in range(numberOfRotors):
-      rotor = randint(0, 25)
-      settings = settings + alphabet[rotor]
+        rotor = randint(0, 25)
+        settings = settings + alphabet[rotor]
     return settings
 # generate code book
 def generateCodeBook(title, numberOfDays):
