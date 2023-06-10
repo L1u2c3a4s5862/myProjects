@@ -8,13 +8,13 @@ from colorama import Fore
 
 # generate banner
 banner = """
- ██▓     ██▓ ▄████▄  ▓█████  ███▄    █   ██████ ▓█████      ▄████ ▓█████  ███▄    █ 
-▓██▒    ▓██▒▒██▀ ▀█  ▓█   ▀  ██ ▀█   █ ▒██    ▒ ▓█   ▀     ██▒ ▀█▒▓█   ▀  ██ ▀█   █ 
-▒██░    ▒██▒▒▓█    ▄ ▒███   ▓██  ▀█ ██▒░ ▓██▄   ▒███      ▒██░▄▄▄░▒███   ▓██  ▀█ ██▒
-▒██░    ░██░▒▓▓▄ ▄██▒▒▓█  ▄ ▓██▒  ▐▌██▒  ▒   ██▒▒▓█  ▄    ░▓█  ██▓▒▓█  ▄ ▓██▒  ▐▌██▒
-░██████▒░██░▒ ▓███▀ ░░▒████▒▒██░   ▓██░▒██████▒▒░▒████▒   ░▒▓███▀▒░▒████▒▒██░   ▓██░
-░ ▒░▓  ░░▓  ░ ░▒ ▒  ░░░ ▒░ ░░ ▒░   ▒ ▒ ▒ ▒▓▒ ▒ ░░░ ▒░ ░    ░▒   ▒ ░░ ▒░ ░░ ▒░   ▒ ▒ 
-\033[1;35m                                -=Author: Lucas Liu=-                                \033[1;0m
+██╗     ██╗ ██████╗███████╗███╗   ██╗███████╗███████╗     ██████╗ ███████╗███╗   ██╗
+██║     ██║██╔════╝██╔════╝████╗  ██║██╔════╝██╔════╝    ██╔════╝ ██╔════╝████╗  ██║
+██║     ██║██║     █████╗  ██╔██╗ ██║███████╗█████╗      ██║  ███╗█████╗  ██╔██╗ ██║
+██║     ██║██║     ██╔══╝  ██║╚██╗██║╚════██║██╔══╝      ██║   ██║██╔══╝  ██║╚██╗██║
+███████╗██║╚██████╗███████╗██║ ╚████║███████║███████╗    ╚██████╔╝███████╗██║ ╚████║
+╚══════╝╚═╝ ╚═════╝╚══════╝╚═╝  ╚═══╝╚══════╝╚══════╝     ╚═════╝ ╚══════╝╚═╝  ╚═══╝
+\033[1;35m                               -=Author: Lucas Liu=-                               \033[1;0m
 """
 def banners(banner):
     print(banner)
@@ -70,11 +70,12 @@ letters_kor = ['평양', '라선', '평남', '평북', '자강', '황남', '황�
 def generate_license(nation, num):
     # generate the Chinese license plates
     if nation == "ch":
-        # printStep(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
         print(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
         time.sleep(1)
-        print("\033[1;34m普通车牌   特殊车牌    市政车牌\033[1;0m")
-        time.sleep(0.5)
+        print("\033[1;33m+-----------+------------+-----------+\033[1;0m")
+        print("\033[1;33m|\033[1;34m普通车牌   \033[1;33m|\033[1;34m特殊车牌    \033[1;33m|\033[1;34m市政车牌   \033[1;33m|\033[1;0m")
+        print("\033[1;33m+-----------+------------+-----------+\033[1;0m")
+        time.sleep(0.05)
         for i in range(num):
             province = random.choice(provinces)
             city = random.choice(cities)
@@ -85,11 +86,11 @@ def generate_license(nation, num):
             if spec_letter_suf == "警" or spec_letter_suf == "领":
                 spec_letter_suf = Fore.RED + spec_letter_suf + Fore.RESET
             spec_letter_pre = str(random.choice(spec_chars_pre))
-            print(f"{province}{city}·{letters}  {province}{city}·{spec_letters}{spec_letter_suf}  {spec_chars_pre}{city}·{letters}")
+            print(f"\033[1;33m|\033[1;0m{province}{city}·{letters}  \033[1;33m|\033[1;0m{province}{city}·{spec_letters}{spec_letter_suf}  \033[1;33m|\033[1;0m{spec_chars_pre}{city}·{letters}\033[1;33m|\033[1;0m")
             time.sleep(0.05)
+        print("\033[1;33m+-----------+------------+-----------+\033[1;0m")
     # generate the UK license plates
     elif nation == "uk":
-        # printStep(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
         print(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
         time.sleep(1)
         for i in range(num):
@@ -100,7 +101,6 @@ def generate_license(nation, num):
             time.sleep(0.05)
     # generate the US license plates
     elif nation == "us":
-        # printStep(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
         print(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
         time.sleep(1)
         for i in range(num):
@@ -110,7 +110,6 @@ def generate_license(nation, num):
             time.sleep(0.05)
     # generate the Japan license plates
     elif nation == "jp":
-        # printStep(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
         print(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
         time.sleep(1)
         for i in range(num):
@@ -130,7 +129,6 @@ def generate_license(nation, num):
             time.sleep(0.05)
     # generate the Korea license plates
     elif nation == "kor":
-        # printStep(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
         print(f"\033[1;35mgenerating {num} {nation} license plates...\033[1;0m")
         time.sleep(1)
         for i in range(num):
