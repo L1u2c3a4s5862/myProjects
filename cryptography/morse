@@ -3,6 +3,18 @@
 
 import argparse
 
+banner = """
+███╗   ███╗ ██████╗ ██████╗ ███████╗███████╗
+████╗ ████║██╔═══██╗██╔══██╗██╔════╝██╔════╝
+██╔████╔██║██║   ██║██████╔╝███████╗█████╗  
+██║╚██╔╝██║██║   ██║██╔══██╗╚════██║██╔══╝  
+██║ ╚═╝ ██║╚██████╔╝██║  ██║███████║███████╗
+╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝
+\033[1;35m          -=Author: Lucas Liu=-          \033[1;0m
+"""
+def banners(banner):
+    print(banner)
+
 # split string
 def split(string):
     return [char for char in string]
@@ -22,6 +34,7 @@ def morse(filename, mode):
     # inputs and outputs
     encrypted_message = open(filename, "r").read()
     decrypted_message = ""
+    # split the mode into decrypt and encrypt
     # if the mode is decrypt
     if mode == "decode":
         # change 1,0 to .,-
@@ -36,8 +49,6 @@ def morse(filename, mode):
             elif emessage[i] == '/':
                 emessage[i] = '/'
                 encrypted_message = ''.join(emessage)
-        # split the mode into decrypt and encrypt
-        # if the mode is decrypt
         line = encrypted_message.split(" ")
         # calculate the answer of the morse code
         # morse code dictionary
@@ -76,7 +87,7 @@ def morse(filename, mode):
         print(f"encoded binary: \033[1;36m`{decrypted_bin}`\033[1;0m")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description='morse code encrypter and decrypter')
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description=banners(banner))
     parser.add_argument('mode', help='encode or decode. Two form of encrypted messages: morse and binary form;\ndecrypted messages are in lower case message')
     parser.add_argument('-f', '--file', help='file name for message you want to encrypt\n\033[1;31mdo not enter `~` as `/Users/<username>/`\033[1;0m\n')
     args = parser.parse_args()
