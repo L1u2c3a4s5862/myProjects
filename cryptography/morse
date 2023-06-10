@@ -3,7 +3,7 @@
 
 import argparse
 
-# split
+# split string
 def split(string):
     return [char for char in string]
 # main function `morse`
@@ -22,6 +22,7 @@ def morse(filename, mode):
     # inputs and outputs
     encrypted_message = open(filename, "r").read()
     decrypted_message = ""
+    # if the mode is decrypt
     if mode == "decode":
         # change 1,0 to .,-
         emessage = list(encrypted_message)
@@ -35,9 +36,6 @@ def morse(filename, mode):
             elif emessage[i] == '/':
                 emessage[i] = '/'
                 encrypted_message = ''.join(emessage)
-            elif emessage[i] == ' ':
-                emessage[i] = ' '
-                encrypted_message = ''.join(emessage)
         # split the mode into decrypt and encrypt
         # if the mode is decrypt
         line = encrypted_message.split(" ")
@@ -47,8 +45,9 @@ def morse(filename, mode):
             for keys, values in morse_dic.items():
                 if values == line[i]:
                     decrypted_message += keys
+        # print the decrypted message
         print(f"decoded morse message: \033[1;36m`{decrypted_message.lower()}`\033[1;0m")
-
+    # if the mode is encrypt
     if mode == "encode":
         # change A,B to .,-
         line = split(encrypted_message.upper())
@@ -58,6 +57,7 @@ def morse(filename, mode):
                     decrypted_message += values + " "
         print(f"encoded morse: \033[1;36m`{decrypted_message}`\033[1;0m")
         emessage = list(decrypted_message)
+        # change .,- to 1,0
         decrypted_bin = ''
         for i in range(len(emessage)):
             if emessage[i] == '-':
@@ -72,6 +72,7 @@ def morse(filename, mode):
             elif emessage[i] == '/':
                 emessage[i] = '/'
                 decrypted_bin = ''.join(emessage)
+        # print the binary code
         print(f"encoded binary: \033[1;36m`{decrypted_bin}`\033[1;0m")
 
 if __name__ == "__main__":
