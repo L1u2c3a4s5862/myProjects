@@ -2,20 +2,27 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import os
 
 # get banners
 banner = """
- ▄▄▄     ▄▄▄█████▓ ▄▄▄▄    ▄▄▄        ██████  ██░ ██     ▄████▄   ██▓ ██▓███   ██░ ██ ▓█████  ██▀███  
-▒████▄   ▓  ██▒ ▓▒▓█████▄ ▒████▄    ▒██    ▒ ▓██░ ██▒   ▒██▀ ▀█  ▓██▒▓██░  ██▒▓██░ ██▒▓█   ▀ ▓██ ▒ ██▒
-▒██  ▀█▄ ▒ ▓██░ ▒░▒██▒ ▄██▒██  ▀█▄  ░ ▓██▄   ▒██▀▀██░   ▒▓█    ▄ ▒██▒▓██░ ██▓▒▒██▀▀██░▒███   ▓██ ░▄█ ▒
-░██▄▄▄▄██░ ▓██▓ ░ ▒██░█▀  ░██▄▄▄▄██   ▒   ██▒░▓█ ░██    ▒▓▓▄ ▄██▒░██░▒██▄█▓▒ ▒░▓█ ░██ ▒▓█  ▄ ▒██▀▀█▄  
- ▓█   ▓██▒ ▒██▒ ░ ░▓█  ▀█▓ ▓█   ▓██▒▒██████▒▒░▓█▒░██▓   ▒ ▓███▀ ░░██░▒██▒ ░  ░░▓█▒░██▓░▒████▒░██▓ ▒██▒
- ▒▒   ▓▒█░ ▒ ░░   ░▒▓███▀▒ ▒▒   ▓▒█░▒ ▒▓▒ ▒ ░ ▒ ░░▒░▒   ░ ░▒ ▒  ░░▓  ▒▓▒░ ░  ░ ▒ ░░▒░▒░░ ▒░ ░░ ▒▓ ░▒▓░
-  ▒   ▒▒ ░   ░    ▒░▒   ░   ▒   ▒▒ ░░ ░▒  ░ ░ ▒ ░▒░ ░     ░  ▒    ▒ ░░▒ ░      ▒ ░▒░ ░ ░ ░  ░  ░▒ ░ ▒░
-\033[1;25m                                        -=Author: Lucas Liu=                                        -\033[1;0m
+ █████╗ ████████╗██████╗  █████╗ ███████╗██╗  ██╗     ██████╗██╗██████╗ ██╗  ██╗███████╗██████╗ 
+██╔══██╗╚══██╔══╝██╔══██╗██╔══██╗██╔════╝██║  ██║    ██╔════╝██║██╔══██╗██║  ██║██╔════╝██╔══██╗
+███████║   ██║   ██████╔╝███████║███████╗███████║    ██║     ██║██████╔╝███████║█████╗  ██████╔╝
+██╔══██║   ██║   ██╔══██╗██╔══██║╚════██║██╔══██║    ██║     ██║██╔═══╝ ██╔══██║██╔══╝  ██╔══██╗
+██║  ██║   ██║   ██████╔╝██║  ██║███████║██║  ██║    ╚██████╗██║██║     ██║  ██║███████╗██║  ██║
+╚═╝  ╚═╝   ╚═╝   ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝     ╚═════╝╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
+\033[1;35m                                     -=Author: Lucas Liu=-                                     \033[1;0m
 """
 def banners(banner):
     print(banner)
+
+# read file
+def readFile(filename):
+	file = open(filename, 'r')
+	message = file.read()
+	file.close()
+	return message
 
 # cipher function
 def atBashCipher(message):
@@ -24,25 +31,35 @@ def atBashCipher(message):
         if char.isalpha():
             if char.isupper():
                 # For uppercase characters
-                cipher_text += chr(90 - (ord(char) - 65))
+                cipher_text += chr(90-(ord(char)-65))
             else:
                 # For lowercase characters
-                cipher_text += chr(122 - (ord(char) - 97))
+                cipher_text += chr(122-(ord(char)-97))
         else:
-            cipher_text += char  # For non-alphabetic characters
+            cipher_text += char # For non-alphabetic characters
     return cipher_text
 
 # main function
-def atBash(message, mode):
-    if mode == "encode":
-        print(f"Encoded message: \033[1;34m{atBashCipher(message)}\033[1;0m")
-    elif mode == "decode":
-        print(f"Decoded message: \033[1;34m{atBashCipher(message)}\033[1;0m")
+def atBash(message, mode, output):
+    if os.path.isfile(message):
+        message = readFile(message)
+    # output the result
+    result = atBashCipher(message)
+    # if the `output` is None, print the result
+    if output is None:
+        print(f"{mode.capitalize()}d message: \033[1;34m{result}\033[1;0m")
+    # else write the result to the `output` file
+    else:
+        file = open(output, 'w')
+        file.write(result)
+        file.close()
+        print(f"{mode.capitalize()}d message saved as \033[1;34m{output}\033[1;0m")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=banners(banner))
     parser.add_argument("message", help="Message to \033[1;35mencrypt/decrypt\033[1;0m")
     parser.add_argument("mode", help="Mode of the code; \033[1;35mencode/decode\033[1;0m")
+    parser.add_argument("-out", "--output", help="Output file to the encrypted/decrypted message", default=None)
     args = parser.parse_args()
-    
-    atBash(args.message, args.mode)
+    # Call the function
+    atBash(args.message, args.mode, args.output)
