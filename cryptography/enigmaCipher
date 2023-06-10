@@ -1,6 +1,7 @@
 #!/usr/local/bin/python3
 # -*- coding: utf-8 -*-
 
+import os
 import random
 import string
 import argparse
@@ -20,6 +21,7 @@ banner = """
 """
 def banners(banner):
 	print(banner)
+
 # rotor setting function
 def rotorSetting(numberOfRotors):
 	rotors = ["I", "II", "III", "IV", "V"]
@@ -38,6 +40,7 @@ def rotorSetting(numberOfRotors):
 	settings = rotor_i + " " + rotor_ii + " " + rotor_iii
 	settings = settings + (""*(9-len(settings)))
 	return settings.split(" ")
+
 # rotor postition function
 def rotorPosition(numberOfRotors):
 	settings = ""
@@ -45,6 +48,7 @@ def rotorPosition(numberOfRotors):
 		rotor = randint(0, 25)
 		settings = settings + alphabet[rotor]
 	return settings
+
 # ring setting function
 def ringSetting(numberOfRotors):
 	settings = ""
@@ -52,6 +56,7 @@ def ringSetting(numberOfRotors):
 		rotor = randint(0, 25)
 		settings = settings + alphabet[rotor]
 	return settings
+
 # plugboard setting function
 def plugboardSetting(numberOfPermutations):
 	settings = ""
@@ -73,6 +78,7 @@ def plugboardSetting(numberOfPermutations):
 		settings = settings + alphabet[stecksA[i]] + alphabet[stecksB[i]] + " "
 	settings = settings[:-1]
 	return settings
+
 # encryption and decryption function
 def caesarShift(str, amount):
 	output = ""
@@ -83,8 +89,16 @@ def caesarShift(str, amount):
 			c = chr(((code-65+amount)%26)+65)
 		output = output+c
 	return output
+
+# read file
+def readFile(filename):
+	file = open(filename, 'r')
+	message = file.read()
+	file.close()
+	return message
+
 #! main function: enigmaCipher
-def enigmaCipher(message, reflector, rotors, ringSettings, ringPositions, plugboard):
+def enigmaCipher(message, reflector, rotors, ringSettings, ringPositions, plugboard, output):
 	"""
 	message: the message you want to encode
 	reflector: the reflector for encoder to set the alphabets
@@ -105,8 +119,8 @@ def enigmaCipher(message, reflector, rotors, ringSettings, ringPositions, plugbo
 	rotor5 = "VZBRGITYUPSDNHLXAWMJQOFECK"
 	rotor5Notch = "Z"
 	# set the rotor and rotor notch to a dictionary
-	rotorDict = {"I":rotor1,"II":rotor2,"III":rotor3,"IV":rotor4,"V":rotor5}
-	rotorNotchDict = {"I":rotor1Notch,"II":rotor2Notch,"III":rotor3Notch,"IV":rotor4Notch,"V":rotor5Notch}
+	rotorDict = {"I":rotor1, "II":rotor2, "III":rotor3, "IV":rotor4, "V":rotor5}
+	rotorNotchDict = {"I":rotor1Notch, "II":rotor2Notch, "III":rotor3Notch, "IV":rotor4Notch, "V":rotor5Notch}
 	# set the relectors for encoder
 	reflectorB = {"A":"Y", "Y":"A", "B":"R", "R":"B", "C":"U", "U":"C", "D":"H", "H":"D", "E":"Q", "Q":"E", "F":"S", "S":"F", "G":"L",
 				  "L":"G", "I":"P", "P":"I", "J":"X", "X":"J", "K":"N", "N":"K"," M":"O", "O":"M", "T":"Z", "Z":"T", "V":"W", "W":"V"}
@@ -162,7 +176,10 @@ def enigmaCipher(message, reflector, rotors, ringSettings, ringPositions, plugbo
 			plugboardDict[pair[0]] = pair[1]
 			plugboardDict[pair[1]] = pair[0]
 	# Begin encoding message
-	message = message.upper()
+	if os.path.isfile(message):
+		message = readFile(message).upper()
+	else:
+		message = message.upper()
 	for letter in message:
 		encryptedLetter = letter
 		if letter in alphabet:
@@ -236,18 +253,25 @@ def enigmaCipher(message, reflector, rotors, ringSettings, ringPositions, plugbo
 					encryptedLetter = plugboardDict[encryptedLetter]
 		ciphertext = ciphertext+encryptedLetter
 	# sprint out the encrypted message
-	print(f"Enigma M3 \033[1;35m{reflector}\033[1;0m Encrypter")
-	print(f"rotor settings: \033[1;35m{rotors}\033[1;0m\nring settings: \033[1;35m{ringSettings}\033[1;0m\nring positions: \033[1;35m{ringPositions}\033[1;0m\nplugboard: \033[1;35m{plugboard}\033[1;0m\n")
-	print(f"message: \033[1;33m{ciphertext}\033[1;0m")
+	print(f"Enigma M3 \033[1;35m{reflector}\033[1;0m En/Decrypter")
+	print(f"Rotor Settings: \033[1;35m{rotors}\033[1;0m\nRing Settings: \033[1;35m{ringSettings}\033[1;0m\nRing Positions: \033[1;35m{ringPositions}\033[1;0m\nPlugboard: \033[1;35m{plugboard}\033[1;0m\n")
+	if output is None:
+		print(f"Message:\n\033[1;33m{ciphertext}\033[1;0m")
+	else:
+		print(f"The file \033[1;35m{output}\033[1;0m has been created")
+		file = open(output, 'w')
+		file.write(ciphertext)
+		file.close()
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description=banners(banner))
-	parser.add_argument("message", help="message you want the encrypt or decrypt")
-	parser.add_argument("-ref", "--reflector", type=str, default="UKW-B", help="\033[1;31mdefault relfector setting: \033[1;32m`UKW-B`\033[1;0m")
-	parser.add_argument("-rotor", "--rotor-setting", type=str, help="\033[1;31mrotor setting: \033[1;32m`I, II, III`\033[1;0m")
-	parser.add_argument("-ring", "--ring-setting", type=str, help="\033[1;31mring setting: \033[1;32m`ABC`\033[1;0m")
-	parser.add_argument("-rpos", "--ring-position", type=str, help="\033[1;31mring position: \033[1;32m`DEF`\033[1;0m")
-	parser.add_argument("-plug", "--plugboard", type=str, help="\033[1;31mplugboard setting: \033[1;32m`AB CD EF GH IJ KL MN OP QR ST`\033[1;0m")
+	parser.add_argument("message", type=str, help="message you want the encrypt or decrypt")
+	parser.add_argument("-ref", "--reflector", type=str, default="UKW-B", help="\033[1;31mdefault relfector setting: \033[1;32mUKW-B\033[1;0m")
+	parser.add_argument("rotor_setting", type=str, help="\033[1;31mrotor setting: \033[1;32m'I, II, III'\033[1;0m")
+	parser.add_argument("ring_setting", type=str, help="\033[1;31mring setting: \033[1;32mABC\033[1;0m")
+	parser.add_argument("ring_position", type=str, help="\033[1;31mring position: \033[1;32mDEF\033[1;0m")
+	parser.add_argument("plugboard", type=str, help="\033[1;31mplugboard setting: \033[1;32m'AB CD EF GH IJ KL MN OP QR ST'\033[1;0m")
+	parser.add_argument("-out", "--output", type=str, default=None, help="write the encrypted/decrypted message into a output file")
 	args = parser.parse_args()
 	# Check if the user has entered a rotor setting
 	if args.rotor_setting is None:
@@ -261,4 +285,4 @@ if __name__ == '__main__':
 	if args.plugboard is None:
 		args.plugboard = plugboardSetting(randint(8, 13))
 	# run the enimga cipher
-	enigmaCipher(args.message, args.reflector, args.rotor_setting, args.ring_setting, args.ring_position, args.plugboard)
+	enigmaCipher(args.message, args.reflector, args.rotor_setting, args.ring_setting, args.ring_position, args.plugboard, args.output)
