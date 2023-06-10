@@ -2,19 +2,27 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import os
 
 # get banners
 banner = """
- ███▄ ▄███▓ ▒█████   ███▄    █  ▒█████   ▄▄▄       ██▓     ██▓███   ██░ ██  ▄▄▄      
-▓██▒▀█▀ ██▒▒██▒  ██▒ ██ ▀█   █ ▒██▒  ██▒▒████▄    ▓██▒    ▓██░  ██▒▓██░ ██▒▒████▄    
-▓██    ▓██░▒██░  ██▒▓██  ▀█ ██▒▒██░  ██▒▒██  ▀█▄  ▒██░    ▓██░ ██▓▒▒██▀▀██░▒██  ▀█▄  
-▒██    ▒██ ▒██   ██░▓██▒  ▐▌██▒▒██   ██░░██▄▄▄▄██ ▒██░    ▒██▄█▓▒ ▒░▓█ ░██ ░██▄▄▄▄██ 
-▒██▒   ░██▒░ ████▓▒░▒██░   ▓██░░ ████▓▒░ ▓█   ▓██▒░██████▒▒██▒ ░  ░░▓█▒░██▓ ▓█   ▓██▒
-░ ▒░   ░  ░░ ▒░▒░▒░ ░ ▒░   ▒ ▒ ░ ▒░▒░▒░  ▒▒   ▓▒█░░ ▒░▓  ░▒▓▒░ ░  ░ ▒ ░░▒░▒ ▒▒   ▓▒█░
-\033[1;35m                                -=Author: Lucas Liu=-                                \033[1;0m
+███╗   ███╗ ██████╗ ███╗   ██╗ ██████╗  █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗ 
+████╗ ████║██╔═══██╗████╗  ██║██╔═══██╗██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗
+██╔████╔██║██║   ██║██╔██╗ ██║██║   ██║███████║██║     ██████╔╝███████║███████║
+██║╚██╔╝██║██║   ██║██║╚██╗██║██║   ██║██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║
+██║ ╚═╝ ██║╚██████╔╝██║ ╚████║╚██████╔╝██║  ██║███████╗██║     ██║  ██║██║  ██║
+╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+\033[1;35m                             -=Author: Lucas Liu=-                             \033[1;0m
 """
 def banners(banner):
     print(banner)
+
+# read file
+def readFile(filename):
+	file = open(filename, 'r')
+	message = file.read()
+	file.close()
+	return message
 
 # cipher function
 def monoAlphaCipher(message):
@@ -31,22 +39,30 @@ def monoAlphaCipher(message):
                 # For uppercase characters
                 cipher_text += cipher_map[char.lower()].upper()
             else:
-                cipher_text += cipher_map[char]  # For lowercase characters
+                cipher_text += cipher_map[char] # For lowercase characters
         else:
-            cipher_text += char  # For non-alphabetic characters
+            cipher_text += char # For non-alphabetic characters
     return cipher_text
 
 # main function
-def monoAlpha(message, mode):
-    if mode == "encode":
-        print(f"Encoded message: \033[1;34m{monoAlphaCipher(message)}\033[1;0m")
-    elif mode == "decode":
-        print(f"Decoded message: \033[1;34m{monoAlphaCipher(message)}\033[1;0m")
+def monoAlpha(message, mode, output):
+    # check if message is a file
+    if os.path.isfile(message):
+        message = readFile(message)
+    # check the output file
+    if output is None: # print to the screen
+        print(f"{mode.capitalize()}d message: \033[1;34m{monoAlphaCipher(message)}\033[1;0m")
+    else: # write to file
+        file = open(output, 'w')
+        file.write(monoAlphaCipher(message))
+        file.close()
+        print(f"{mode.capitalize()}d message saved as \033[1;34m{output}\033[1;0m")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=banners(banner))
     parser.add_argument("message", help="Message for \033[1;35mencrypt/decrypt\033[1;0m")
-    parser.add_argument("mode", help="Mode for \033[1;35mencode/decode\033[1;0m")
+    parser.add_argument("mode", help="Mode of the code: \033[1;35mencode/decode\033[1;0m")
+    parser.add_argument("-out", "--output", help="Output file to the encrypted/decrypted message", default=None)
     args = parser.parse_args()
-
-    monoAlpha(args.message, args.mode)
+    # Call the function
+    monoAlpha(args.message, args.mode, args.output)
